@@ -259,3 +259,12 @@ h1, h2, h3 { line-height: 1.3; margin: 0; }
   .card, .btn, .chip { transition: none; }
   .card:hover { transform: none; }
 }
+
+/* ───────── 故事與私人作品 ───────── */
+.story { max-width: 720px; margin: 0 auto; }
+.story h2 { font-size: 1.6rem; margin-bottom: 16px; }
+.story p { margin: 0 0 1em; font-size: 1.05rem; }
+.more-lead { margin: -12px 0 20px; }
+.more-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.more-list li { display: grid; align-content: start; gap: 4px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.more-list span { color: var(--muted); font-size: .92rem; }

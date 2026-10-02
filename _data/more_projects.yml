@@ -1,0 +1,12 @@
+# 首頁「還放在私人 repo 的東西」區塊：只有名稱和簡介，不放連結。
+# 某個作品公開後，把它搬到 projects.yml 就好；這裡清空的話整個區塊會自動隱藏。
+- name: 蔬力計畫
+  summary: 拍下餐點照片，用手機端的 Gemini Nano 辨識食物的 Android App
+- name: 英文遊樂園
+  summary: 給小朋友玩的英文啟蒙網頁遊戲
+- name: Claude Code Agent for Obsidian
+  summary: 在 Obsidian 裡用 Claude Code 幫忙編輯筆記的外掛
+- name: CopilotAssistant
+  summary: 用 GitHub Copilot SDK 做的桌面浮動 AI 助理
+- name: 遠端桌面管理工具
+  summary: 分頁式管理多台 RDP 連線，帳號密碼加密儲存

@@ -7,10 +7,11 @@ layout: default
     <img class="avatar" src="{{ site.author.avatar }}" alt="{{ site.author.name }} 的頭像" width="112" height="112">
     <div>
       <p class="eyebrow">{{ site.author.location }} · GitHub @{{ site.author.github }}</p>
-      <h1>嗨，我是 {{ site.author.name }}</h1>
-      <p class="lead">這裡放的是我做的東西：Android App、網頁工具、Chrome 擴充功能和桌面小工具。每一件都附上原始碼，有發佈版本的也可以直接下載。</p>
+      <h1>有靈感，就跟 AI 一起把它做出來</h1>
+      <p class="lead">我是 {{ site.author.name }}，在物流產業當軟體工程師。這裡放的是我自己動手做的小作品，有些還在慢慢改。</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#projects">看作品（{{ projects.size }}）</a>
+        <a class="btn" href="#story">我的故事</a>
         <a class="btn" href="https://github.com/{{ site.author.github }}" rel="me">GitHub 個人頁</a>
       </div>
     </div>
@@ -45,6 +46,33 @@ layout: default
     <p class="empty-filter" hidden>這個分類目前沒有作品。</p>
   </div>
 </section>
+
+<section class="section section-alt" id="story">
+  <div class="container">
+    <div class="story">
+      <h2>從 WinForms 到跟 AI 一起寫</h2>
+      <p>2020 年左右，我用 C# WinForms 寫一些自己用的小工具：看電池和 CPU 狀態的監看程式、隨機播放整個資料夾音樂的播放器，還有一鍵產生 GUID 並複製到剪貼簿的小程式。那時候想做什麼，都得先把那個技術鑽研起來，改起來會花很多時間在除錯，因為總是需要有撞牆的過程，才會逐漸有經驗。</p>
+      <p>2026 年開始，AI 很明顯地加入了開發過程。很多領域已經不用從零學起，只要把靈感跟 AI 講清楚，就能一起把東西做出來。所以這一年做的東西一下子變多了：Android App、Chrome 擴充功能、Obsidian 外掛都有。</p>
+      <p>像「接片室」，就是出去玩錄了一堆影片，想把它們接成一支，突然冒出來的點子。現在已經能用，不過還有很多地方要優化。</p>
+    </div>
+  </div>
+</section>
+
+{%- if site.data.more_projects.size > 0 %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>還放在私人 repo 的東西</h2>
+    </div>
+    <p class="muted more-lead">這些還沒公開原始碼，先簡單介紹。</p>
+    <ul class="more-list">
+      {%- for m in site.data.more_projects %}
+      <li><strong>{{ m.name }}</strong><span>{{ m.summary }}</span></li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif %}
 
 {%- if site.posts.size > 0 %}
 <section class="section section-alt">
