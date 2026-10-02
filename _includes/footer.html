@@ -1,0 +1,9 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© {{ site.time | date: '%Y' }} {{ site.author.name }}{% if site.author.location %} · {{ site.author.location }}{% endif %}</p>
+    <p>
+      <a href="https://github.com/{{ site.author.github }}" rel="me">GitHub</a>
+      {%- if site.posts.size > 0 %} · <a href="{{ '/feed.xml' | relative_url }}">RSS</a>{% endif %}
+    </p>
+  </div>
+</footer>

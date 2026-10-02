@@ -1,0 +1,21 @@
+<header class="site-nav">
+  <div class="container nav-inner">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <img src="{{ site.author.avatar }}" alt="" width="28" height="28">
+      <span>{{ site.title }}</span>
+    </a>
+    <nav aria-label="主選單">
+      {%- for item in site.navbar %}
+      <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+      {%- endfor %}
+      {%- if site.posts.size > 0 %}
+      <a href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog/' %} aria-current="page"{% endif %}>文章</a>
+      {%- endif %}
+      <a href="https://github.com/{{ site.author.github }}" rel="me">GitHub</a>
+      <button class="theme-toggle" type="button" aria-label="切換深色／淺色模式" title="切換深色／淺色模式">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>

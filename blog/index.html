@@ -1,0 +1,20 @@
+---
+layout: default
+title: 文章
+---
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>文章</h2>
+    </div>
+    {%- if site.posts.size > 0 %}
+    <ul class="post-list">
+      {%- for post in site.posts %}
+      {% include post-item.html post=post %}
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="muted">還沒有文章。</p>
+    {%- endif %}
+  </div>
+</section>

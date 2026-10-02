@@ -1,0 +1,94 @@
+# ─────────────────────────────────────────────────────────────
+# 作品清單：首頁的作品牆會照這裡的順序顯示。
+# 新增作品＝複製一段、改內容、推上 GitHub，一兩分鐘後網站就會更新。
+#
+# 欄位說明
+#   name        作品名稱（必填）
+#   en          副標，例如英文名或 repo 名（選填）
+#   categories  分類 key，可以填多個，對應 _data/categories.yml（必填）
+#   summary     一兩句話的介紹（必填）
+#   highlights  重點，建議 2～4 點（選填）
+#   tech        使用的技術，會顯示成小標籤（選填）
+#   image       封面圖，建議 16:10，放在 assets/img/projects/（選填）
+#   icon        沒有封面圖時，封面中間顯示的 emoji（選填）
+#   accent      沒有封面圖時，封面的主色（選填）
+#   status      顯示在名稱旁邊的小字，例如版本號（選填）
+#   links       按鈕：label 是文字，url 是網址；第一個會是主要按鈕（選填）
+# ─────────────────────────────────────────────────────────────
+
+- name: lens-tag
+  categories: [android]
+  summary: 用手機相機即時框出畫面中的物件，辨識後可以自訂名稱、翻譯成指定語言；之後看到同類物件會直接顯示存好的名稱。
+  highlights:
+    - 物件偵測用 ML Kit，辨識交給裝置端的 Gemini Nano，不用自己訓練分類模型
+    - 雙語標籤、TTS 唸出名稱，看到的單字可以標記進單字本
+    - 支援 cardboard VR 模式，戴著眼鏡用「凝視停留」操作
+    - App 會自己檢查 GitHub Release，有新版直接在 App 內下載安裝
+  tech: [Kotlin, Jetpack Compose, CameraX, ML Kit, Gemini Nano]
+  icon: "🏷️"
+  accent: "#22c55e"
+  links:
+    - label: 下載 APK
+      url: https://github.com/cornming/lens-tag/releases
+    - label: 原始碼
+      url: https://github.com/cornming/lens-tag
+
+- name: 走走冒險
+  en: WalkAdventure
+  status: V0.1
+  categories: [android]
+  summary: 「你走的每一步，都是遊戲進度。」用 Android 實際步數驅動的輕量冒險 RPG：走路拿經驗、升級、探索地圖、開寶箱。
+  highlights:
+    - 讀取手機計步感測器（TYPE_STEP_COUNTER）的實際步數
+    - 每 1000 步開寶箱拿金幣，每 500 步觸發一次隨機事件
+    - 不需要 GPS、不需要登入，進度存在手機本機
+  tech: [Java, Android]
+  icon: "🗺️"
+  accent: "#f97316"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/WalkAdventure
+
+- name: 接片室
+  en: vlog-stitch
+  categories: [web, android]
+  summary: 在手機上把好幾段影片接成一支，燒上字幕，匯出成可以直接上傳 YouTube 的檔案。有網頁版，也有 Android 原生版。
+  highlights:
+    - 網頁版只有一個 index.html，沒有後端，影片全程留在手機裡
+    - Whisper 直接在瀏覽器裡跑，自動聽打中、英、日字幕，可匯入匯出 SRT
+    - 三種匯出方式自己選：快速接片、重新編碼、即時錄製
+    - Android 版用 Media3 Transformer 走手機的硬體編解碼器
+  tech: [JavaScript, WebCodecs, Whisper, Kotlin, Media3]
+  image: /assets/img/projects/vlog-stitch.jpg
+  links:
+    - label: 下載 Android 版
+      url: https://github.com/cornming/vlog-stitch/releases
+    - label: 原始碼
+      url: https://github.com/cornming/vlog-stitch
+
+- name: Markdown Viewer
+  categories: [extension]
+  summary: Chrome 擴充功能，直接在瀏覽器裡預覽和編輯 Markdown。把本機的 .md 檔拖進 Chrome 就能立刻看到排版結果。
+  highlights:
+    - 編輯、預覽並排，中間的分隔線可以拖曳調整
+    - 支援 GitHub Flavored Markdown 與 Mermaid 圖表
+    - 深色／淺色主題，草稿自動儲存
+  tech: [JavaScript, Manifest V3, marked.js, DOMPurify, Mermaid]
+  image: /assets/img/projects/markdown-viewer.jpg
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/Markdown-Viewer
+
+- name: Zip 打包工具
+  en: ZipPackerTool
+  categories: [desktop]
+  summary: Windows 上的資料夾壓縮小工具，選好資料夾就打包成 zip，可以排除指定的檔案類型，還會記住每個資料夾上次的設定。
+  highlights:
+    - 圖形化介面，用點選的就能操作
+    - 預設排除 .zip、.json、.config，也可以自己改
+    - 打包完自動開啟檔案總管，直接看到成品
+  tech: [Python, tkinter]
+  image: /assets/img/projects/zip-packer.jpg
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/ZipPackerTool

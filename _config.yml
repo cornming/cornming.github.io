@@ -1,0 +1,45 @@
+# ── 網站基本資訊 ─────────────────────────────
+title: cornming
+tagline: 作品集
+description: cornming 的作品集：Android App、網頁工具、Chrome 擴充功能與桌面小工具，每一件都附上原始碼。
+lang: zh-Hant
+locale: zh_TW
+timezone: Asia/Taipei
+
+url: "https://cornming.github.io"
+baseurl: ""
+
+# ── 個人資訊（顯示在首頁與頁尾）────────────────
+author:
+  name: cornming
+  location: 台灣
+  github: cornming
+  avatar: https://avatars.githubusercontent.com/u/19969233?v=4
+
+# 分享到社群時的預設圖片
+logo: https://avatars.githubusercontent.com/u/19969233?v=4
+
+# ── 導覽列 ───────────────────────────────────
+# 「文章」只有在 _posts/ 有文章時才會出現，不用在這裡設定
+navbar:
+  - title: 作品
+    url: /#projects
+
+# ── 建置設定（GitHub Pages 原生支援，不需要 Actions）──
+# 版型全部自己寫，不套用 GitHub Pages 預設的 primer 佈景主題
+theme: null
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+permalink: /blog/:year/:month/:day/:title/
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .jekyll-cache

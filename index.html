@@ -1,0 +1,63 @@
+---
+layout: default
+---
+{%- assign projects = site.data.projects -%}
+<section class="hero">
+  <div class="container hero-inner">
+    <img class="avatar" src="{{ site.author.avatar }}" alt="{{ site.author.name }} 的頭像" width="112" height="112">
+    <div>
+      <p class="eyebrow">{{ site.author.location }} · GitHub @{{ site.author.github }}</p>
+      <h1>嗨，我是 {{ site.author.name }}</h1>
+      <p class="lead">這裡放的是我做的東西：Android App、網頁工具、Chrome 擴充功能和桌面小工具。每一件都附上原始碼，有發佈版本的也可以直接下載。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#projects">看作品（{{ projects.size }}）</a>
+        <a class="btn" href="https://github.com/{{ site.author.github }}" rel="me">GitHub 個人頁</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-head">
+      <h2>作品</h2>
+      {%- comment -%} 只為「有作品用到」的分類產生篩選按鈕 {%- endcomment -%}
+      {%- assign used = ' ' -%}
+      {%- for p in projects -%}
+        {%- assign cats = p.categories | join: ' ' -%}
+        {%- assign used = used | append: cats | append: ' ' -%}
+      {%- endfor -%}
+      <div class="filters" role="group" aria-label="依分類篩選">
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">全部</button>
+        {%- for c in site.data.categories %}
+          {%- assign needle = ' ' | append: c.key | append: ' ' -%}
+          {%- if used contains needle %}
+        <button type="button" class="chip" data-filter="{{ c.key }}" aria-pressed="false">{{ c.label }}</button>
+          {%- endif %}
+        {%- endfor %}
+      </div>
+    </div>
+    <div class="grid">
+      {%- for p in projects %}
+      {% include project-card.html project=p %}
+      {%- endfor %}
+    </div>
+    <p class="empty-filter" hidden>這個分類目前沒有作品。</p>
+  </div>
+</section>
+
+{%- if site.posts.size > 0 %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>最新文章</h2>
+      <a class="more" href="{{ '/blog/' | relative_url }}">全部文章 →</a>
+    </div>
+    <ul class="post-list">
+      {%- for post in site.posts limit: 3 %}
+      {% include post-item.html post=post %}
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif %}

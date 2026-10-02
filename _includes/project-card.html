@@ -1,0 +1,46 @@
+{%- assign p = include.project -%}
+<article class="card" data-cats="{{ p.categories | join: ' ' }}">
+  <div class="card-cover"{% unless p.image %} style="--accent: {{ p.accent | default: '#6366f1' }}"{% endunless %}>
+    {%- if p.image %}
+    <img src="{{ p.image | relative_url }}" alt="{{ p.name }} 的畫面" loading="lazy" width="800" height="500">
+    {%- else %}
+    <div class="cover-art" aria-hidden="true">
+      <span class="cover-icon">{{ p.icon | default: '✦' }}</span>
+      <span class="cover-name">{{ p.en | default: p.name }}</span>
+    </div>
+    {%- endif %}
+  </div>
+  <div class="card-body">
+    <div class="card-cats">
+      {%- for key in p.categories %}
+        {%- assign cat = site.data.categories | where: 'key', key | first %}
+        <span class="cat">{{ cat.label | default: key }}</span>
+      {%- endfor %}
+    </div>
+    <h3 class="card-title">
+      {{- p.name -}}
+      {%- if p.en %} <span class="en">{{ p.en }}</span>{% endif -%}
+      {%- if p.status %} <span class="status">{{ p.status }}</span>{% endif -%}
+    </h3>
+    <p class="summary">{{ p.summary }}</p>
+    {%- if p.highlights %}
+    <ul class="highlights">
+      {%- for h in p.highlights %}
+      <li>{{ h }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    {%- if p.tech %}
+    <ul class="tech" aria-label="使用技術">
+      {%- for t in p.tech %}<li>{{ t }}</li>{% endfor -%}
+    </ul>
+    {%- endif %}
+    {%- if p.links %}
+    <div class="card-links">
+      {%- for l in p.links %}
+      <a class="btn{% if forloop.first %} btn-primary{% endif %}" href="{{ l.url }}">{{ l.label }}</a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+  </div>
+</article>
