@@ -1,5 +1,7 @@
 # 作品分類：首頁的篩選按鈕會依這個順序出現。
 # 只有「至少有一件作品用到」的分類才會顯示按鈕。
+- key: game
+  label: 遊戲
 - key: android
   label: Android App
 - key: web

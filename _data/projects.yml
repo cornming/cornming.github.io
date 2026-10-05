@@ -16,6 +16,23 @@
 #   links       按鈕：label 是文字，url 是網址；第一個會是主要按鈕（選填）
 # ─────────────────────────────────────────────────────────────
 
+- name: 叮咚！便利店
+  en: dingdong-mart
+  categories: [game, web]
+  summary: 向九〇年代末台灣便利商店經營遊戲致敬的原創網頁遊戲。一九九九年的夏天，你頂下巷口的一間小店，進貨、排班、對付奧客，把它變成整條街最亮的招牌。
+  highlights:
+    - 手機直式畫面優先，打開瀏覽器就能玩，也能建置成單一 HTML 檔離線玩
+    - 三個城市、各商圈客層不同，30 天後依總資產頒發銅、銀、金牌，存到 300 萬可以退休或開分店
+    - 店面用 canvas 向量繪圖，音樂和音效用 WebAudio 即時合成，沒有任何音檔
+    - 線上排行榜與留言板，後端是一份 Google 試算表加 Apps Script
+  tech: [JavaScript, Canvas, WebAudio, Google Apps Script, GitHub Actions]
+  image: /assets/img/projects/dingdong-mart.jpg
+  links:
+    - label: 線上玩
+      url: https://cornming.github.io/dingdong-mart/
+    - label: 原始碼
+      url: https://github.com/cornming/dingdong-mart
+
 - name: lens-tag
   categories: [android]
   summary: 用手機相機即時框出畫面中的物件，辨識後可以自訂名稱、翻譯成指定語言；之後看到同類物件會直接顯示存好的名稱。
@@ -36,7 +53,7 @@
 - name: 走走冒險
   en: WalkAdventure
   status: V0.1
-  categories: [android]
+  categories: [android, game]
   summary: 「你走的每一步，都是遊戲進度。」用 Android 實際步數驅動的輕量冒險 RPG：走路拿經驗、升級、探索地圖、開寶箱。
   highlights:
     - 讀取手機計步感測器（TYPE_STEP_COUNTER）的實際步數
