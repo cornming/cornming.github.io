@@ -33,6 +33,22 @@
     - label: 原始碼
       url: https://github.com/cornming/dingdong-mart
 
+- name: 3D 魔物獵人 Web 原型
+  en: mh-3d-web
+  categories: [game, web]
+  summary: 用 Three.js 和 Web Audio API 做的純前端 3D 動作遊戲原型，不用 Node.js、不用建置工具，在本機啟動就能玩。
+  highlights:
+    - 大劍和雙劍兩種武器可以切換，有輕攻擊連段、依蓄力時間分級的重斬、翻滾無敵時間，還有回覆藥和砥石
+    - 魔物會追蹤玩家，有甩尾、龍吼和狂暴狀態，頭、角、尾巴都可以被破壞
+    - 模型是用 Blender 腳本產生的 GLB，音效全部用 Web Audio API 即時合成，沒有外部音檔
+    - 鍵盤、滑鼠、觸控按鈕都能操作，支援目標鎖定與自由視角；戰績存在 localStorage
+  tech: [JavaScript, Three.js, Web Audio API, Blender, PowerShell]
+  icon: "⚔️"
+  accent: "#ef4444"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/mh-3d-web
+
 - name: lens-tag
   categories: [android]
   summary: 用手機相機即時框出畫面中的物件，辨識後可以自訂名稱、翻譯成指定語言；之後看到同類物件會直接顯示存好的名稱。
