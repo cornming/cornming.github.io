@@ -37,11 +37,11 @@
   categories: [android]
   summary: 用手機相機即時框出畫面中的物件，辨識後可以自訂名稱、翻譯成指定語言；之後看到同類物件會直接顯示存好的名稱。
   highlights:
-    - 物件偵測用 ML Kit，辨識交給裝置端的 Gemini Nano，不用自己訓練分類模型
-    - 雙語標籤、TTS 唸出名稱，看到的單字可以標記進單字本
+    - 物件偵測用 ML Kit，辨識可選裝置端的 Gemini Nano（離線免費，限部分機型）或 Azure AI Foundry（較準、需網路），不用自己訓練分類模型
+    - 雙語標籤、TTS 唸出名稱，看到的單字可以標記進單字本；也能拍一張照片，圈選任意範圍再辨識
     - 支援 cardboard VR 模式，戴著眼鏡用「凝視停留」操作
     - App 會自己檢查 GitHub Release，有新版直接在 App 內下載安裝
-  tech: [Kotlin, Jetpack Compose, CameraX, ML Kit, Gemini Nano]
+  tech: [Kotlin, Jetpack Compose, CameraX, ML Kit, Gemini Nano, Azure AI Foundry]
   icon: "🏷️"
   accent: "#22c55e"
   links:
@@ -109,3 +109,18 @@
   links:
     - label: 原始碼
       url: https://github.com/cornming/ZipPackerTool
+
+- name: 電池與 CPU 監看條
+  en: BatteryCPUMonitor
+  categories: [desktop]
+  summary: 貼在螢幕邊緣的兩列迷你橫條，隨時看得到電池、CPU、記憶體、GPU、磁碟讀寫和網路速度。目標平台是 Windows 10/11（64 位元）。
+  highlights:
+    - 可以拖曳移動、記住位置，也能嵌進工作列、開機自動啟動、滑鼠穿透
+    - CPU／GPU 溫度、功耗、頻率和風扇轉速是選用功能，需要系統管理員權限，預設關閉
+    - 內建自動更新，下載後會先驗證 SHA-256 才安裝
+  tech: [C#, .NET 10, Windows Forms, LibreHardwareMonitor, GitHub Actions]
+  icon: "🔋"
+  accent: "#0ea5e9"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/BatteryCPUMonitor
