@@ -36,7 +36,7 @@
 - name: 3D 魔物獵人 Web 原型
   en: mh-3d-web
   categories: [game, web]
-  summary: 用 Three.js 和 Web Audio API 做的純前端 3D 動作遊戲原型，不用 Node.js、不用建置工具，在本機啟動就能玩。
+  summary: 用 Three.js 和 Web Audio API 做的純前端 3D 動作遊戲原型，不用 Node.js、不用建置工具，打開網頁就能玩。
   highlights:
     - 大劍和雙劍兩種武器可以切換，有輕攻擊連段、依蓄力時間分級的重斬、翻滾無敵時間，還有回覆藥和砥石
     - 魔物會追蹤玩家，有甩尾、龍吼和狂暴狀態，頭、角、尾巴都可以被破壞
@@ -46,6 +46,8 @@
   icon: "⚔️"
   accent: "#ef4444"
   links:
+    - label: 線上玩
+      url: https://cornming.github.io/mh-3d-web/
     - label: 原始碼
       url: https://github.com/cornming/mh-3d-web
 
@@ -135,8 +137,7 @@
     - CPU／GPU 溫度、功耗、頻率和風扇轉速是選用功能，需要系統管理員權限，預設關閉
     - 內建自動更新，下載後會先驗證 SHA-256 才安裝
   tech: [C#, .NET 10, Windows Forms, LibreHardwareMonitor, GitHub Actions]
-  icon: "🔋"
-  accent: "#0ea5e9"
+  image: /assets/img/projects/battery-cpu-monitor.jpg
   links:
     - label: 原始碼
       url: https://github.com/cornming/BatteryCPUMonitor
