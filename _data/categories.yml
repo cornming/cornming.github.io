@@ -10,3 +10,5 @@
   label: 瀏覽器擴充功能
 - key: desktop
   label: 桌面工具
+- key: automation
+  label: 自動化工具

@@ -141,3 +141,23 @@
   links:
     - label: 原始碼
       url: https://github.com/cornming/BatteryCPUMonitor
+
+- name: 每日英語上傳
+  en: daily-english-uploader
+  categories: [automation]
+  summary: 自己用的 YouTube 上傳小工具：把「每日英語小故事」頻道做好的英語學習短片，透過 YouTube Data API 上傳到自己的頻道。這個 repo 放的是工具的介紹頁和中英雙語隱私權政策。
+  highlights:
+    - 影片一律先上傳成「私人」，要不要公開留給自己到 YouTube Studio 決定
+    - 設定標題、說明、標籤，加進自己的播放清單，並上傳中文字幕檔
+    - 上傳前先讀取頻道與播放清單資訊，確認傳到正確的頻道、避免同一集重複上傳
+    - 沒有伺服器也沒有資料庫，授權憑證只存在本機，隨時可以到 Google 帳戶撤銷授權
+  tech: [YouTube Data API v3, OAuth 2.0, HTML, GitHub Pages]
+  icon: "📤"
+  accent: "#c2410c"
+  links:
+    - label: 介紹頁
+      url: https://cornming.github.io/daily-english-uploader/
+    - label: 隱私權政策
+      url: https://cornming.github.io/daily-english-uploader/privacy.html
+    - label: GitHub
+      url: https://github.com/cornming/daily-english-uploader
