@@ -195,9 +195,19 @@
   }
 
   // ───────── 組畫面 ─────────
+  // 資料格式怪異（欄位缺漏、型別不對）時，不要留下畫到一半的圖，改顯示一句說明
   function render() {
+    try {
+      renderChecked();
+    } catch (e) {
+      showStatus('統計資料的格式讀不懂，請稍後再試。');
+    }
+  }
+
+  function renderChecked() {
     var a = data && data.apps && data.apps[current];
     if (!a) { showStatus('這個作品目前沒有資料。'); return; }
+    if (!Array.isArray(a.byHour) || a.byHour.length !== 24) throw new Error('bad byHour');
 
     if (!a.total) {
       bodyEl.hidden = true;
@@ -312,8 +322,14 @@
 
   var endpoint = root.dataset.endpoint;
   if (!endpoint) { showStatus('統計網址還沒設定。'); return; }
-  fetch(endpoint)
-    .then(function (r) { return r.json(); })
-    .then(function (j) { data = j; render(); })
-    .catch(function () { showStatus('暫時讀不到統計資料，請稍後再試。'); });
+  // 15 秒讀不到就放棄，不讓畫面一直停在「讀取中」
+  var ctl = typeof AbortController === 'function' ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
+  fetch(endpoint, ctl ? { signal: ctl.signal } : undefined)
+    .then(function (r) {
+      if (!r.ok) throw new Error('http ' + r.status);
+      return r.json();
+    })
+    .then(function (j) { clearTimeout(timer); data = j; render(); })
+    .catch(function () { clearTimeout(timer); showStatus('暫時讀不到統計資料，請稍後再試。'); });
 })();
