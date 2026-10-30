@@ -51,6 +51,45 @@
     - label: 原始碼
       url: https://github.com/cornming/mh-3d-web
 
+- name: SlowJog
+  en: slowjog
+  status: v0.1.31
+  categories: [android, web]
+  summary: 陪你養成「早晨 30 分鐘運動＋超慢跑」習慣的 App。節拍器、階段式課表、語音口令、運動紀錄和習慣分數一次到位，有 Android 版，也有瀏覽器直接用的網頁版。
+  highlights:
+    - 超慢跑節拍器 40 到 240 BPM，Android 版用前景服務，鎖屏後仍會繼續；可以邊聽 Spotify 邊用
+    - 暖身、超慢跑、肌力、伸展的階段式課表，階段最後 5 秒倒數、自動接續，做動作時有讀秒與換邊口令
+    - 桌面小工具、每日提醒、習慣分數與每週目標，運動紀錄可匯出 CSV；沒有廣告、不追蹤
+    - 網頁版用 Rust + Leptos 編譯成 WebAssembly，課表與統計邏輯從 Kotlin 版移植並附單元測試
+    - 推上 main 會由 GitHub Actions 自動建置 APK 發佈到 Releases，App 內可直接檢查更新
+  tech: [Kotlin, Jetpack Compose, Rust, Leptos, WebAssembly, Web Audio, GitHub Actions]
+  image: /assets/img/projects/slowjog.jpg
+  links:
+    - label: 網頁版
+      url: https://cornming.github.io/slowjog/
+    - label: 下載 APK
+      url: https://github.com/cornming/slowjog/releases
+    - label: 原始碼
+      url: https://github.com/cornming/slowjog
+
+- name: 晚安瑜伽
+  en: night-yoga
+  status: v0.1.0
+  categories: [web]
+  summary: 睡前 5 到 15 分鐘的溫和伸展與呼吸引導網頁。免註冊、免下載，可以加到手機主畫面，離線也能用。
+  highlights:
+    - 三組睡前課程、十個溫和體式，示範圖是用關節角度即時畫出的人形動畫，貓牛式會跟著呼吸動
+    - 4-7-8、延長吐氣、方塊呼吸三種呼吸引導，圓圈跟著吸吐縮放
+    - 五種背景音樂用 Web Audio 即時合成，沒有音檔、沒有版權問題；語音優先播預錄的 Gemini TTS 檔，沒有才退回瀏覽器語音
+    - 課程與體式都放在 JSON，改資料不用動程式；另附語音驗收工具，檢查語速、靜音與音量後再請 Gemini 聽寫評分
+  tech: [Rust, Leptos, WebAssembly, Web Audio, PWA, Gemini TTS, GitHub Actions]
+  image: /assets/img/projects/night-yoga.jpg
+  links:
+    - label: 線上試用
+      url: https://cornming.github.io/night-yoga/
+    - label: 原始碼
+      url: https://github.com/cornming/night-yoga
+
 - name: lens-tag
   categories: [android]
   summary: 用手機相機即時框出畫面中的物件，辨識後可以自訂名稱、翻譯成指定語言；之後看到同類物件會直接顯示存好的名稱。
@@ -141,3 +180,19 @@
   links:
     - label: 原始碼
       url: https://github.com/cornming/BatteryCPUMonitor
+
+- name: 每日英語上傳
+  en: daily-english-uploader
+  categories: [web]
+  summary: 我自己經營的 YouTube 頻道「每日英語小故事」用的上傳自動化工具，透過 YouTube Data API 把每天做好的英語短片傳到自己的頻道。這個 repo 放的是工具的說明頁與隱私權政策，工具本身是個人使用、沒有對外公開。
+  highlights:
+    - 影片一律先上傳為「私人」，公開與否由我在 YouTube Studio 自己決定
+    - 自動設定標題、說明與標籤、加入播放清單，並上傳中文字幕檔
+    - 不對外提供服務、不蒐集任何人的資料，授權憑證只存在我自己的電腦
+  tech: [YouTube Data API, HTML, CSS]
+  image: /assets/img/projects/daily-english-uploader.jpg
+  links:
+    - label: YouTube 頻道
+      url: https://www.youtube.com/@DailyEnglishCat
+    - label: 原始碼
+      url: https://github.com/cornming/daily-english-uploader
