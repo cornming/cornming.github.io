@@ -63,8 +63,7 @@
     - 網頁版用 Rust + Leptos 編譯成 WebAssembly，課表與統計邏輯從 Kotlin 版移植並附單元測試
     - 推上 main 會由 GitHub Actions 自動建置 APK 發佈到 Releases，App 內可直接檢查更新
   tech: [Kotlin, Jetpack Compose, Rust, Leptos, WebAssembly, Web Audio, GitHub Actions]
-  icon: "🏃"
-  accent: "#f97316"
+  image: /assets/img/projects/slowjog.jpg
   links:
     - label: 網頁版
       url: https://cornming.github.io/slowjog/
@@ -192,8 +191,7 @@
     - 自動設定標題、說明與標籤、加入播放清單，並上傳中文字幕檔
     - 不對外提供服務、不蒐集任何人的資料，授權憑證只存在我自己的電腦
   tech: [YouTube Data API, HTML, CSS]
-  icon: "📺"
-  accent: "#ef4444"
+  image: /assets/img/projects/daily-english-uploader.jpg
   links:
     - label: YouTube 頻道
       url: https://www.youtube.com/@DailyEnglishCat
