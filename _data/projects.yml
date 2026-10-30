@@ -83,8 +83,7 @@
     - 五種背景音樂用 Web Audio 即時合成，沒有音檔、沒有版權問題；語音優先播預錄的 Gemini TTS 檔，沒有才退回瀏覽器語音
     - 課程與體式都放在 JSON，改資料不用動程式；另附語音驗收工具，檢查語速、靜音與音量後再請 Gemini 聽寫評分
   tech: [Rust, Leptos, WebAssembly, Web Audio, PWA, Gemini TTS, GitHub Actions]
-  icon: "🌙"
-  accent: "#6366f1"
+  image: /assets/img/projects/night-yoga.jpg
   links:
     - label: 線上試用
       url: https://cornming.github.io/night-yoga/
