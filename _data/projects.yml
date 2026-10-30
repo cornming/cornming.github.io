@@ -67,6 +67,8 @@
   links:
     - label: 網頁版
       url: https://cornming.github.io/slowjog/
+    - label: 使用統計
+      url: /stats/
     - label: 下載 APK
       url: https://github.com/cornming/slowjog/releases
     - label: 原始碼
@@ -87,6 +89,8 @@
   links:
     - label: 線上試用
       url: https://cornming.github.io/night-yoga/
+    - label: 使用統計
+      url: /stats/
     - label: 原始碼
       url: https://github.com/cornming/night-yoga
 

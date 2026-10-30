@@ -1,0 +1,57 @@
+---
+layout: default
+title: 使用統計
+description: 晚安瑜伽與 SlowJog 網頁版的匿名完成統計：累計完成次數、一天中的使用時段、課程排行榜。
+---
+<section class="section stats" data-endpoint="{{ site.stats_endpoint }}">
+  <div class="container">
+    <div class="section-head">
+      <h2>使用統計</h2>
+      <div class="stats-tabs" role="group" aria-label="選擇作品">
+        <button class="chip" type="button" data-app="night-yoga" aria-pressed="true">晚安瑜伽</button>
+        <button class="chip" type="button" data-app="slowjog" aria-pressed="false">SlowJog 網頁版</button>
+      </div>
+    </div>
+    <p class="muted stats-lead">有多少人真的把一次練習做完、通常在什麼時候做、哪一組課程最受歡迎。只算「完成」，不算有沒有打開過。</p>
+    <p class="stats-status" role="status" aria-live="polite">讀取中…</p>
+
+    <div class="stats-body" hidden>
+      <div class="stats-tiles" id="stats-tiles"></div>
+
+      <div class="stats-grid">
+        <figure class="stats-card">
+          <figcaption>
+            <h3>最近 30 天，每天完成幾次</h3>
+          </figcaption>
+          <div class="stats-chart" id="chart-days"></div>
+        </figure>
+
+        <figure class="stats-card">
+          <figcaption>
+            <h3>一天中，哪些時段最多人完成</h3>
+            <p class="muted stats-sub">以使用者手機的當地時間計算</p>
+          </figcaption>
+          <div class="stats-chart" id="chart-hours"></div>
+          <p class="stats-insight" id="insight-hours"></p>
+        </figure>
+
+        <figure class="stats-card" id="card-courses">
+          <figcaption>
+            <h3>課程排行榜</h3>
+            <p class="muted stats-sub">依累計完成次數排序</p>
+          </figcaption>
+          <div class="stats-chart" id="chart-courses"></div>
+        </figure>
+      </div>
+
+      <details class="stats-details">
+        <summary>用表格看數字</summary>
+        <div id="stats-tables"></div>
+      </details>
+    </div>
+
+    <p class="muted stats-foot" id="stats-updated"></p>
+    <p class="muted stats-foot">這些是約略的數字，請當成參考，不是嚴謹的使用人數：收集用的網址是公開的、沒有登入驗證，理論上任何人都能送資料進來。只有「整組課程走完」（晚安瑜伽），或「達成目標並儲存」（SlowJog）才算一次完成，中途離開不算。每一筆只記錄作品、課程、時間與當下的小時，沒有帳號、沒有裝置編號、沒有任何個人資料。SlowJog 的 Android App 不會送出任何資料，所以不在這裡。資料約每分鐘更新一次。</p>
+  </div>
+</section>
+<script src="{{ '/assets/js/stats.js' | relative_url }}" defer></script>

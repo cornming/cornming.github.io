@@ -34,6 +34,10 @@
 在 `_posts/` 新增 `YYYY-MM-DD-英文網址.md`，可以參考 [`_drafts/文章範本.md`](_drafts/文章範本.md)。
 只要有一篇文章，導覽列就會自動出現「文章」，首頁也會顯示最新三篇。
 
+## 使用統計
+
+[`/stats/`](stats/index.html) 顯示晚安瑜伽、SlowJog 網頁版的匿名完成統計（累計次數、使用時段、課程排行榜）。資料收在一份 Google 試算表，由 Apps Script 收集與提供，程式碼和重新部署的步驟在 [`apps-script/`](apps-script/README.md)，網址設定在 `_config.yml` 的 `stats_endpoint`。
+
 ## 修改個人資訊
 
 名稱、地區、頭像、網站說明都在 [`_config.yml`](_config.yml)；首頁的自我介紹在 [`index.html`](index.html) 最上面。
