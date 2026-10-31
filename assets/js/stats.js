@@ -167,6 +167,32 @@
     container.appendChild(list);
   }
 
+  // ───────── 回訪：第 1 次、第 2 次、第 3 次、第 4 次以後 ─────────
+  // 每個瀏覽器的「第 1 次」只會出現一次，所以第 1 次的筆數約等於不同的手機數；
+  // 「第 2 次 ÷ 第 1 次」就是第一次來的手機裡，有多少比例又回來做了第 2 次。
+  function returnChart(container, rows, first) {
+    clear(container);
+    var card = container.closest('.stats-card');
+    var max = Math.max.apply(null, rows.map(function (r) { return r.value; }));
+    var list = el('ol', 'stats-rank');
+    rows.forEach(function (r, i) {
+      var li = el('li', 'rank-row');
+      li.tabIndex = 0;
+      li.appendChild(el('span', 'rank-no', String(i + 1)));
+      li.appendChild(el('span', 'rank-name', r.label));
+      var track = el('span', 'rank-track');
+      var bar = el('span', 'rank-bar');
+      track.style.setProperty('--w', String(max ? Math.max(r.value / max, r.value > 0 ? 0.02 : 0) : 0));
+      track.appendChild(bar);
+      var text = fmt(r.value) + ' 次' + (r.ofFirst && first ? '（' + pct(r.value, first) + '%）' : '');
+      track.appendChild(el('span', 'rank-val', text));
+      li.appendChild(track);
+      list.appendChild(li);
+      attachTip(card, li, r.label + '：' + text);
+    });
+    container.appendChild(list);
+  }
+
   // ───────── 表格檢視 ─────────
   function table(caption, head, rows) {
     var t = el('table', 'stats-table');
@@ -277,6 +303,34 @@
       courseCard.hidden = true;
     }
 
+    // 回訪（舊版收集端沒有這個欄位時，整張卡片不顯示）
+    var returnCard = document.getElementById('card-return');
+    var nth = a.byNth || {};
+    var n1 = Number(nth['1']) || 0, n2 = Number(nth['2']) || 0, n3 = Number(nth['3']) || 0, n4 = Number(nth['4+']) || 0;
+    var returnRows = [];
+    if (n1 + n2 + n3 + n4 === 0) {
+      returnCard.hidden = true;
+    } else {
+      returnCard.hidden = false;
+      returnRows = [
+        { label: '第 1 次', value: n1, ofFirst: true },
+        { label: '第 2 次', value: n2, ofFirst: true },
+        { label: '第 3 次', value: n3, ofFirst: true },
+        { label: '第 4 次以後', value: n4, ofFirst: false }
+      ];
+      returnChart(document.getElementById('chart-return'), returnRows, n1);
+      var insight = n1
+        ? '第一次來的手機裡，有 ' + pct(n2, n1) + '% 又回來做了第 2 次' +
+          (n2 ? '；做過第 2 次的，有 ' + pct(n3, n2) + '% 做到第 3 次' : '') + '。'
+        : '還沒有第 1 次完成的紀錄。';
+      if (n1 > 0 && n1 < 20) insight += ' 目前只有 ' + n1 + ' 筆第 1 次，樣本太少，比例先別當真。';
+      document.getElementById('insight-return').textContent = insight;
+      var unknown = Number(a.nthUnknown) || 0;
+      document.getElementById('note-return').textContent =
+        '換手機或清除瀏覽資料會被當成新的人，最近才第一次來的還沒有機會回來，所以這個比例通常會偏低。' +
+        (unknown ? '更早的 ' + fmt(unknown) + ' 筆沒有這項資料，沒有算進來。' : '');
+    }
+
     // 表格
     var tables = document.getElementById('stats-tables');
     clear(tables);
@@ -287,6 +341,11 @@
     if (rows.length) {
       tables.appendChild(table('課程排行榜', ['名次', '課程', '次數'],
         rows.map(function (r, i) { return [String(i + 1), r.label, fmt(r.value)]; })));
+    }
+
+    if (returnRows.length) {
+      tables.appendChild(table('回訪（同一支手機第幾次完成）', ['第幾次', '次數'],
+        returnRows.map(function (r) { return [r.label, fmt(r.value)]; })));
     }
 
     // 更新時間
