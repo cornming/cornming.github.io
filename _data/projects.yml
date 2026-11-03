@@ -211,10 +211,9 @@
     - 地形與建築用 Kenney 的 CC0 貼圖，背景音樂用 Web Audio 即時合成，沒有任何音檔
     - 進度存在瀏覽器 localStorage，依會員編號分開記錄；內容為一般芳香常識，不是醫療建議
   tech: [JavaScript, Canvas, Web Audio API, CSS]
-  icon: "🌿"
-  accent: "#2b8aa8"
+  image: /assets/img/projects/essence-island.jpg
   links:
     - label: 線上玩
       url: https://cornming.github.io/essence-island/
     - label: 原始碼
-      url: https://github.com/cornming/cornming.github.io/tree/main/essence-island
+      url: https://github.com/cornming/essence-island
