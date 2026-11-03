@@ -200,3 +200,21 @@
       url: https://www.youtube.com/@DailyEnglishCat
     - label: 原始碼
       url: https://github.com/cornming/daily-english-uploader
+
+- name: 精油島
+  en: essence-island
+  categories: [web, game]
+  summary: 用等角小島帶新手一步一步熟悉精油的學習網頁。輸入會員編號進島，點選建築，小人會走進去帶你上課：認識精油、稀釋與安全、30 天打卡、配方、手作、查詢和分享。
+  highlights:
+    - 七個學習站依順序解鎖，每站有小測驗，完成後島上會開出一塊花圃
+    - 內建稀釋計算器、30 天打卡、12 款精油查詢和九款生活配方
+    - 地形與建築用 Kenney 的 CC0 貼圖，背景音樂用 Web Audio 即時合成，沒有任何音檔
+    - 進度存在瀏覽器 localStorage，依會員編號分開記錄；內容為一般芳香常識，不是醫療建議
+  tech: [JavaScript, Canvas, Web Audio API, CSS]
+  icon: "🌿"
+  accent: "#2b8aa8"
+  links:
+    - label: 線上玩
+      url: https://cornming.github.io/essence-island/
+    - label: 原始碼
+      url: https://github.com/cornming/cornming.github.io/tree/main/essence-island
