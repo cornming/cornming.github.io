@@ -5,8 +5,12 @@
   if (!root) return;
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var APP_NAME = { 'night-yoga': '晚安瑜伽', 'slowjog': 'SlowJog 網頁版' };
-  var APP_URL = { 'night-yoga': 'https://cornming.github.io/night-yoga/', 'slowjog': 'https://cornming.github.io/slowjog/' };
+  var APP_NAME = { 'night-yoga': '晚安瑜伽', 'slowjog': 'SlowJog 網頁版', 'slowjog-android': 'SlowJog Android' };
+  var APP_URL = {
+    'night-yoga': 'https://cornming.github.io/night-yoga/',
+    'slowjog': 'https://cornming.github.io/slowjog/',
+    'slowjog-android': 'https://github.com/cornming/slowjog/releases/latest'
+  };
   var COURSE_NAME = { quick: '快速放鬆', standard: '睡前舒展', deep: '深度放鬆' };
   var PERIODS = [
     { name: '深夜', range: '0 到 4 點', from: 0, to: 4 },

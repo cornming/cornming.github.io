@@ -1,6 +1,6 @@
 # 使用統計的後端（Google Apps Script）
 
-晚安瑜伽、SlowJog 網頁版在使用者「完成一次」時，會把一筆匿名紀錄送到這裡；[/stats/](../stats/index.html) 再從同一個網址讀回統計。
+晚安瑜伽、SlowJog 網頁版與 SlowJog Android App 在使用者「完成一次」時，會把一筆匿名紀錄送到這裡；[/stats/](../stats/index.html) 再從同一個網址讀回統計。
 
 ## 收什麼、不收什麼
 
@@ -9,7 +9,7 @@
 「完成」的定義：
 
 - 晚安瑜伽：整組課程走完，而且實際練習時間至少是課程總長的一半（連按「下一個」跳到最後不算）。單獨的呼吸練習、中途離開都不算。
-- SlowJog 網頁版：達成當次目標（課表走完，或時間／距離目標到了）並按「儲存並結束」。選「放棄這次紀錄」、中途結束都不算。
+- SlowJog 網頁版、SlowJog Android App（作品代號 `slowjog-android`，與網頁版分開統計）：達成當次目標（課表走完，或時間／距離目標到了）並按「儲存並結束」。選「放棄這次紀錄」、中途結束都不算。Android 在「設定」可以關閉回報。
 
 ## 診斷紀錄（測試頁專用，預設關閉）
 
@@ -35,6 +35,7 @@ SlowJog 的聲音測試頁（`audio-test.html`、`bg-audio-test.html`）有一�
    - [`_config.yml`](../_config.yml) 的 `stats_endpoint`
    - 晚安瑜伽 `src/web.rs` 的 `STATS_URL`
    - SlowJog 網頁版 `web/src/web.rs` 的 `STATS_URL`
+   - SlowJog Android App `app/src/main/java/com/cornming/slowjog/stats/CompletionStats.kt` 的 `URL`
 
 之後如果只是修改 `Code.gs`，要用「部署 → 管理部署作業 → 編輯 → 版本選新版本」，網址不會變；單純存檔不會讓線上版更新。
 
