@@ -7,7 +7,8 @@
 
 const ALLOWED = {
   'night-yoga': ['quick', 'standard', 'deep'],
-  'slowjog': ['']            // SlowJog 沒有固定課程，課程欄留空
+  'slowjog': [''],           // SlowJog 網頁版：沒有固定課程，課程欄留空
+  'slowjog-android': ['']    // SlowJog Android App：同樣沒有固定課程；與網頁版分開統計
 };
 const MAX_PER_MINUTE = 30;   // 全站每分鐘最多收幾筆，避免被大量灌數字
 const CACHE_SECONDS = 60;    // 統計結果快取幾秒

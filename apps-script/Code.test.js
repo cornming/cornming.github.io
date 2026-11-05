@@ -30,6 +30,14 @@ ok('統計：原本的作法不變，寫進第一個分頁，不會建立診斷�
   assert.strictEqual(sheets.length, 1); assert.strictEqual(sheets[0].rows.length, 2);
   same(post({ app: 'night-yoga', course: 'quick', hour: 0 }), { ok: true });
 });
+ok('統計：SlowJog Android 與網頁版分開記，也只收課程欄空白、小時 0 到 23', () => {
+  const { sheets, post } = makeEnv();
+  same(post({ app: 'slowjog-android', course: '', hour: 6 }), { ok: true });
+  assert.strictEqual(sheets[0].rows[1][1], 'slowjog-android');
+  assert.strictEqual(post({ app: 'slowjog-android', course: 'quick', hour: 6 }).ok, false, 'Android 沒有固定課程');
+  assert.strictEqual(post({ app: 'slowjog-android', course: '', hour: 24 }).ok, false);
+  assert.strictEqual(post({ app: 'slowjog-android-evil', course: '', hour: 1 }).ok, false);
+});
 ok('統計：未知作品、錯的小時照樣被拒絕', () => {
   const { post } = makeEnv();
   assert.strictEqual(post({ app: 'evil', course: '', hour: 1 }).ok, false);
