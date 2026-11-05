@@ -35,7 +35,7 @@ SlowJog 的聲音測試頁（`audio-test.html`、`bg-audio-test.html`）有一�
    - [`_config.yml`](../_config.yml) 的 `stats_endpoint`
    - 晚安瑜伽 `src/web.rs` 的 `STATS_URL`
    - SlowJog 網頁版 `web/src/web.rs` 的 `STATS_URL`
-   - SlowJog Android App `app/src/main/java/com/cornming/slowjog/stats/CompletionStats.kt` 的 `URL`
+   - SlowJog Android App `app/src/main/java/com/cornming/slowjog/stats/CompletionStats.kt` 的 `ENDPOINT`
 
 之後如果只是修改 `Code.gs`，要用「部署 → 管理部署作業 → 編輯 → 版本選新版本」，網址不會變；單純存檔不會讓線上版更新。
 
