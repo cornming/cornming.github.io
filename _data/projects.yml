@@ -16,6 +16,24 @@
 #   links       按鈕：label 是文字，url 是網址；第一個會是主要按鈕（選填）
 # ─────────────────────────────────────────────────────────────
 
+- name: Pixel 螢幕即時翻譯
+  en: pixel-screen-translate
+  status: v0.4.0
+  categories: [desktop]
+  summary: 像 Google Pixel 手機一樣原地覆蓋翻譯螢幕內容的 Windows 桌面工具。內建 Windows 原生離線 OCR、智慧段落合併、LRU 記憶體快取、雙翻譯檢視模式與動態滾輪即時跟隨。
+  highlights:
+    - 智慧段落合併：依行距與語意自動拼合跨行長句，翻譯文法流暢不破碎
+    - 雙顯示模式：定格全螢幕原地覆蓋排版與側邊滾動對照清單，按 Tab 一鍵切換
+    - 動態滾輪跟隨：滑鼠滾動即時辨識新畫面，全視窗滑鼠穿透不卡頓（Ctrl+Alt+W）
+    - 局部框選翻譯：十字準心拖曳圈選漫畫對話框或局部區域翻譯（Ctrl+Alt+S / Alt+Shift+S）
+    - 離線與極速：Windows 原生 OCR 本機運算不外傳截圖，LRU 快取 0 毫秒極速秒回
+  tech: [Tauri 2, Rust, Vue 3, TypeScript, Windows API, OCR]
+  icon: "🌐"
+  accent: "#0ea5e9"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/pixel-screen-translate
+
 - name: 叮咚！便利店
   en: dingdong-mart
   categories: [game, web]
