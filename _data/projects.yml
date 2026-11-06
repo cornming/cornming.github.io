@@ -84,13 +84,11 @@
   image: /assets/img/projects/slowjog.jpg
   links:
     - label: 網頁版
-      url: https://cornming.github.io/slowjog/
+      url: https://slowjog.netlify.app/
     - label: 使用統計
       url: /stats/
     - label: 下載 APK
       url: https://github.com/cornming/slowjog/releases
-    - label: 原始碼
-      url: https://github.com/cornming/slowjog
 
 - name: 晚安瑜伽
   en: night-yoga
@@ -106,11 +104,9 @@
   image: /assets/img/projects/night-yoga.jpg
   links:
     - label: 線上試用
-      url: https://cornming.github.io/night-yoga/
+      url: https://night-yoga.netlify.app/
     - label: 使用統計
       url: /stats/
-    - label: 原始碼
-      url: https://github.com/cornming/night-yoga
 
 - name: lens-tag
   categories: [android]
