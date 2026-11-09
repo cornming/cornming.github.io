@@ -19,8 +19,9 @@ function makeEnv() {
     console,
   };
   vm.createContext(env);
-  vm.runInContext(fs.readFileSync(require('path').join(__dirname, 'Code.gs'), 'utf8') + '\nthis.__doPost = doPost;', env);
-  return { env, sheets, post: (obj) => JSON.parse(env.__doPost({ postData: { contents: JSON.stringify(obj) } }).t) };
+  vm.runInContext(fs.readFileSync(require('path').join(__dirname, 'Code.gs'), 'utf8') + '\nthis.__doPost = doPost; this.__doGet = doGet;', env);
+  return { env, sheets, post: (obj) => JSON.parse(env.__doPost({ postData: { contents: JSON.stringify(obj) } }).t),
+    stats: () => JSON.parse(env.__doGet().t) };
 }
 let t = 0; const ok = (name, fn) => { fn(); t++; console.log('✓', name); };
 
@@ -42,6 +43,40 @@ ok('統計：未知作品、錯的小時照樣被拒絕', () => {
   const { post } = makeEnv();
   assert.strictEqual(post({ app: 'evil', course: '', hour: 1 }).ok, false);
   assert.strictEqual(post({ app: 'slowjog', course: '', hour: 99 }).ok, false);
+});
+ok('統計：晚安瑜伽收 quick／standard／deep，以及 lying-01 到 lying-07 這個格式，其他一律拒絕', () => {
+  const { sheets, post } = makeEnv();
+  const accepted = ['quick', 'standard', 'deep', 'lying-01', 'lying-02', 'lying-03', 'lying-04', 'lying-05', 'lying-06', 'lying-07'];
+  accepted.forEach((c) => same(post({ app: 'night-yoga', course: c, hour: 22 }), { ok: true }));
+  assert.strictEqual(sheets[0].rows.length, 1 + accepted.length);
+  assert.strictEqual(sheets[0].rows[4][2], 'lying-01');
+  assert.strictEqual(sheets[0].rows[10][2], 'lying-07');
+  // 範圍外、格式不對、大小寫或空白不同、尾端換行、全形數字、空的，都不收
+  ['lying-00', 'lying-08', 'lying-09', 'lying-10', 'lying-1', 'lying-001', 'lying-', 'lying-01 ', ' lying-01', 'lying-01\n',
+   'LYING-01', 'Lying-01', 'lying_01', 'lying-0\uff11', 'lying-01-extra', 'xlying-01', '']
+    .forEach((c) => assert.strictEqual(post({ app: 'night-yoga', course: c, hour: 22 }).ok, false, '不該收：' + JSON.stringify(c)));
+  assert.strictEqual(sheets[0].rows.length, 1 + accepted.length, '被拒絕的不會寫進試算表');
+});
+ok('統計：lying- 課程只算晚安瑜伽的課程，SlowJog 不能用', () => {
+  const { post } = makeEnv();
+  ['lying-01', 'lying-03', 'lying-07'].forEach((c) => {
+    assert.strictEqual(post({ app: 'slowjog', course: c, hour: 1 }).ok, false);
+    assert.strictEqual(post({ app: 'slowjog-android', course: c, hour: 1 }).ok, false);
+  });
+});
+ok('統計：統計頁固定列出三個課程，lying- 課程有人完成過才會出現，不會有 0 次的假課程', () => {
+  const { sheets, post, stats } = makeEnv();
+  same(stats().apps['night-yoga'].byCourse, { quick: 0, standard: 0, deep: 0 });
+  post({ app: 'night-yoga', course: 'lying-01', hour: 23 });
+  post({ app: 'night-yoga', course: 'lying-01', hour: 22 });
+  post({ app: 'night-yoga', course: 'lying-04', hour: 22 });
+  post({ app: 'night-yoga', course: 'quick', hour: 22 });
+  const a = stats().apps['night-yoga'];
+  same(a.byCourse, { quick: 1, standard: 0, deep: 0, 'lying-01': 2, 'lying-04': 1 });
+  assert.strictEqual(a.total, 4);
+  // 試算表裡如果有不在規則內的舊資料（例如手動加的），不會出現在課程排行
+  sheets[0].rows.push([new Date(), 'night-yoga', 'lying-99', 3]);
+  same(stats().apps['night-yoga'].byCourse, { quick: 1, standard: 0, deep: 0, 'lying-01': 2, 'lying-04': 1 });
 });
 ok('診斷：寫進最後面的「診斷紀錄」分頁，第一個分頁仍是統計', () => {
   const { sheets, post } = makeEnv();

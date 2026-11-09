@@ -6,10 +6,24 @@
 // 讓開發者可以直接看到測試結果，不用請使用者複製貼上。內容只有紀錄文字、瀏覽器 userAgent 與隨機的測試代號。
 
 const ALLOWED = {
+  // 統計頁固定列出的課程（沒人做過也會列出，顯示 0）
   'night-yoga': ['quick', 'standard', 'deep'],
   'slowjog': [''],           // SlowJog 網頁版：沒有固定課程，課程欄留空
   'slowjog-android': ['']    // SlowJog Android App：同樣沒有固定課程；與網頁版分開統計
 };
+// 另外接受的課程代號「格式」：晚安瑜伽「躺著做」系列，lying-01 到 lying-07（設計稿共 7 堂）。
+// 這些課程不預先列在統計裡，有人完成過才會出現，所以系列新增一堂不用改這裡、也不用重新部署；
+// 課程的中文名稱在 assets/js/stats.js 的 COURSE_NAME（網站更新就好）。
+// 只有系列超過 7 堂、或有別的新系列時，才需要改這裡並重新部署。
+const ALLOWED_PATTERNS = {
+  'night-yoga': /^lying-0[1-7]$/
+};
+function courseAllowed_(app, course) {
+  if (!ALLOWED[app]) return false;
+  if (ALLOWED[app].indexOf(course) >= 0) return true;
+  const re = ALLOWED_PATTERNS[app];
+  return !!(re && re.test(course));
+}
 const MAX_PER_MINUTE = 30;   // 全站每分鐘最多收幾筆，避免被大量灌數字
 const CACHE_SECONDS = 60;    // 統計結果快取幾秒
 
@@ -67,7 +81,7 @@ function doPost(e) {
     const app = String(d.app || '');
     const course = String(d.course || '');
     const hour = Number(d.hour);
-    if (!ALLOWED[app] || ALLOWED[app].indexOf(course) < 0) return out_({ ok: false });
+    if (!courseAllowed_(app, course)) return out_({ ok: false });
     if (!Number.isInteger(hour) || hour < 0 || hour > 23) return out_({ ok: false });
 
     const cache = CacheService.getScriptCache();
@@ -114,7 +128,8 @@ function buildStats_() {
     a.total++;
     const h = Number(r[3]);
     if (h >= 0 && h <= 23) a.byHour[h]++;
-    if (r[2] && a.byCourse[r[2]] !== undefined) a.byCourse[r[2]]++;
+    const c = String(r[2] || '');
+    if (c && courseAllowed_(r[1], c)) a.byCourse[c] = (a.byCourse[c] || 0) + 1;
     const t = r[0] instanceof Date ? r[0] : new Date(r[0]);
     if (!isNaN(t)) {
       const day = Utilities.formatDate(t, 'Asia/Taipei', 'yyyy-MM-dd');
