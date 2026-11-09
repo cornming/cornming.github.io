@@ -13,7 +13,7 @@
 
 ## 晚安瑜伽新增課程時
 
-晚安瑜伽的課程代號就是 `night-yoga-src` 裡 `data/routines.json` 的課程 id。目前收 `quick`、`standard`、`deep`，以及「躺著做」系列已上線的 `lying-01`。新增課程時：
+晚安瑜伽的課程代號就是 `night-yoga-src` 裡 `data/routines.json` 的課程 id。目前收 `quick`、`standard`、`deep`，以及「躺著做」系列已上線的 `lying-01`、`lying-03`（沒有 `lying-02`，那一堂還沒做）。新增課程時：
 
 1. [`Code.gs`](Code.gs) 的 `ALLOWED['night-yoga']` 加上新代號。
 2. [`assets/js/stats.js`](../assets/js/stats.js) 的 `COURSE_NAME` 加上它的中文名稱（沒加的話，統計頁會直接顯示原始代號）。
