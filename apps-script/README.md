@@ -13,14 +13,17 @@
 
 ## 晚安瑜伽新增課程時
 
-晚安瑜伽的課程代號就是 `night-yoga-src` 裡 `data/routines.json` 的課程 id。目前收 `quick`、`standard`、`deep`，以及「躺著做」系列已上線的 `lying-01`、`lying-03`（沒有 `lying-02`，那一堂還沒做）。新增課程時：
+晚安瑜伽的課程代號就是 `night-yoga-src` 裡 `data/routines.json` 的課程 id。`Code.gs` 接受兩種：
 
-1. [`Code.gs`](Code.gs) 的 `ALLOWED['night-yoga']` 加上新代號。
-2. [`assets/js/stats.js`](../assets/js/stats.js) 的 `COURSE_NAME` 加上它的中文名稱（沒加的話，統計頁會直接顯示原始代號）。
-3. 執行 `node apps-script/Code.test.js`。
-4. 照下面「重新部署」的最後一段更新（版本選新版本，網址不變）。
+- **固定列出**：`quick`、`standard`、`deep`（`ALLOWED`）。統計頁一定會列出，沒人做過就顯示 0。
+- **格式規則**：「躺著做」系列 `lying-01` 到 `lying-07`（`ALLOWED_PATTERNS`）。這些課程**不預先列出**，有人完成過才會出現在統計裡。
 
-只有上線的課程才加：統計頁會把白名單裡的每個代號都畫成一列，預先加還不存在的課程，會出現永遠是 0 的假課程。如果忘了做，使用者不受影響（app 的統計送出失敗會靜靜放棄），只是那堂課的完成次數不會被統計。
+所以：
+
+- 「躺著做」系列新增一堂（`lying-01` 到 `lying-07`）：**不用改 `Code.gs`、不用重新部署 Apps Script**。只要在 [`assets/js/stats.js`](../assets/js/stats.js) 的 `COURSE_NAME` 補上中文名稱（七堂的名稱已經先寫好；沒寫的話，統計頁會直接顯示原始代號），網站更新就好。
+- 系列超過 7 堂、或有別的新系列：改 `Code.gs` 的 `ALLOWED_PATTERNS`，跑 `node apps-script/Code.test.js`，再照下面「重新部署」的最後一段更新（版本選新版本，網址不變）。
+
+為什麼不預先把 7 個代號都列進 `ALLOWED`：統計頁會把 `ALLOWED` 裡的每個代號都畫成一列，預先列出還沒上線的課程，會出現永遠是 0 的假課程。如果課程代號不在這兩種規則內，使用者不受影響（app 的統計送出失敗會靜靜放棄），只是不會被統計。
 
 ## 診斷紀錄（測試頁專用，預設關閉）
 
