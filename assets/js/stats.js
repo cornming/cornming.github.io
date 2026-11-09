@@ -11,7 +11,7 @@
     'slowjog': 'https://slowjog.netlify.app/',
     'slowjog-android': 'https://github.com/cornming/slowjog/releases/latest'
   };
-  var COURSE_NAME = { quick: '快速放鬆', standard: '睡前舒展', deep: '深度放鬆' };
+  var COURSE_NAME = { quick: '快速放鬆', standard: '睡前舒展', deep: '深度放鬆', 'lying-01': '躺好就好' };
   var PERIODS = [
     { name: '深夜', range: '0 到 4 點', from: 0, to: 4 },
     { name: '早上', range: '5 到 11 點', from: 5, to: 11 },

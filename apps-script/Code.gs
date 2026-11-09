@@ -6,7 +6,9 @@
 // 讓開發者可以直接看到測試結果，不用請使用者複製貼上。內容只有紀錄文字、瀏覽器 userAgent 與隨機的測試代號。
 
 const ALLOWED = {
-  'night-yoga': ['quick', 'standard', 'deep'],
+  // 晚安瑜伽的課程代號 = data/routines.json 的課程 id。「躺著做」系列（lying-）每上線一堂，就要加進這裡並重新部署；
+  // 沒加的話使用者不受影響，只是那堂課的完成次數不會被統計。名稱對照在 assets/js/stats.js 的 COURSE_NAME。
+  'night-yoga': ['quick', 'standard', 'deep', 'lying-01'],
   'slowjog': [''],           // SlowJog 網頁版：沒有固定課程，課程欄留空
   'slowjog-android': ['']    // SlowJog Android App：同樣沒有固定課程；與網頁版分開統計
 };

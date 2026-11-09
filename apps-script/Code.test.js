@@ -19,8 +19,9 @@ function makeEnv() {
     console,
   };
   vm.createContext(env);
-  vm.runInContext(fs.readFileSync(require('path').join(__dirname, 'Code.gs'), 'utf8') + '\nthis.__doPost = doPost;', env);
-  return { env, sheets, post: (obj) => JSON.parse(env.__doPost({ postData: { contents: JSON.stringify(obj) } }).t) };
+  vm.runInContext(fs.readFileSync(require('path').join(__dirname, 'Code.gs'), 'utf8') + '\nthis.__doPost = doPost; this.__doGet = doGet;', env);
+  return { env, sheets, post: (obj) => JSON.parse(env.__doPost({ postData: { contents: JSON.stringify(obj) } }).t),
+    stats: () => JSON.parse(env.__doGet().t) };
 }
 let t = 0; const ok = (name, fn) => { fn(); t++; console.log('✓', name); };
 
@@ -42,6 +43,31 @@ ok('統計：未知作品、錯的小時照樣被拒絕', () => {
   const { post } = makeEnv();
   assert.strictEqual(post({ app: 'evil', course: '', hour: 1 }).ok, false);
   assert.strictEqual(post({ app: 'slowjog', course: '', hour: 99 }).ok, false);
+});
+ok('統計：晚安瑜伽收 quick／standard／deep 與已上線的 lying-01，其他課程代號一律拒絕', () => {
+  const { sheets, post } = makeEnv();
+  ['quick', 'standard', 'deep', 'lying-01'].forEach((c) => same(post({ app: 'night-yoga', course: c, hour: 22 }), { ok: true }));
+  assert.strictEqual(sheets[0].rows.length, 1 + 4);
+  assert.strictEqual(sheets[0].rows[4][2], 'lying-01');
+  // 還沒上線的下一堂、格式不對的、大小寫或空白不同的、空的，都不收
+  ['lying-02', 'lying-99', 'lying-', 'lying-01 ', 'LYING-01', ''].forEach((c) =>
+    assert.strictEqual(post({ app: 'night-yoga', course: c, hour: 22 }).ok, false, '不該收：' + JSON.stringify(c)));
+  assert.strictEqual(sheets[0].rows.length, 5, '被拒絕的不會寫進試算表');
+});
+ok('統計：lying-01 只算晚安瑜伽的課程，SlowJog 不能用', () => {
+  const { post } = makeEnv();
+  assert.strictEqual(post({ app: 'slowjog', course: 'lying-01', hour: 1 }).ok, false);
+  assert.strictEqual(post({ app: 'slowjog-android', course: 'lying-01', hour: 1 }).ok, false);
+});
+ok('統計：統計頁讀到的資料，lying-01 會被算進晚安瑜伽的課程排行，沒人做過時是 0', () => {
+  const { post, stats } = makeEnv();
+  same(stats().apps['night-yoga'].byCourse, { quick: 0, standard: 0, deep: 0, 'lying-01': 0 });
+  post({ app: 'night-yoga', course: 'lying-01', hour: 23 });
+  post({ app: 'night-yoga', course: 'lying-01', hour: 22 });
+  post({ app: 'night-yoga', course: 'quick', hour: 22 });
+  const a = stats().apps['night-yoga'];
+  same(a.byCourse, { quick: 1, standard: 0, deep: 0, 'lying-01': 2 });
+  assert.strictEqual(a.total, 3);
 });
 ok('診斷：寫進最後面的「診斷紀錄」分頁，第一個分頁仍是統計', () => {
   const { sheets, post } = makeEnv();
