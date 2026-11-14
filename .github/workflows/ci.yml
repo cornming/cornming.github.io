@@ -1,0 +1,40 @@
+# 只做檢查，不負責部署：網站仍由 GitHub Pages 在推上 main 之後自動建置。
+# 這裡在 PR 階段先確認兩件事，避免合併後才發現網站建不起來：
+#   1. apps-script/Code.gs 的單元測試通過
+#   2. Jekyll 建得起來（_data/*.yml 的格式、Liquid 樣板語法）
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apps Script unit tests
+        run: node apps-script/Code.test.js
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build
