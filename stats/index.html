@@ -6,7 +6,7 @@ description: 晚安瑜伽、SlowJog 網頁版與 Android App 的匿名完成統�
 <section class="section stats" data-endpoint="{{ site.stats_endpoint }}">
   <div class="container">
     <div class="section-head">
-      <h2>使用統計</h2>
+      <h1>使用統計</h1>
       <div class="stats-tabs" role="group" aria-label="選擇作品">
         <button class="chip" type="button" data-app="night-yoga" aria-pressed="true">晚安瑜伽</button>
         <button class="chip" type="button" data-app="slowjog" aria-pressed="false">SlowJog 網頁版</button>
@@ -22,14 +22,14 @@ description: 晚安瑜伽、SlowJog 網頁版與 Android App 的匿名完成統�
       <div class="stats-grid">
         <figure class="stats-card">
           <figcaption>
-            <h3>最近 30 天，每天完成幾次</h3>
+            <h2>最近 30 天，每天完成幾次</h2>
           </figcaption>
           <div class="stats-chart" id="chart-days"></div>
         </figure>
 
         <figure class="stats-card">
           <figcaption>
-            <h3>一天中，哪些時段最多人完成</h3>
+            <h2>一天中，哪些時段最多人完成</h2>
             <p class="muted stats-sub">以使用者手機的當地時間計算</p>
           </figcaption>
           <div class="stats-chart" id="chart-hours"></div>
@@ -38,7 +38,7 @@ description: 晚安瑜伽、SlowJog 網頁版與 Android App 的匿名完成統�
 
         <figure class="stats-card" id="card-courses">
           <figcaption>
-            <h3>課程排行榜</h3>
+            <h2>課程排行榜</h2>
             <p class="muted stats-sub">依累計完成次數排序</p>
           </figcaption>
           <div class="stats-chart" id="chart-courses"></div>
@@ -55,4 +55,4 @@ description: 晚安瑜伽、SlowJog 網頁版與 Android App 的匿名完成統�
     <p class="muted stats-foot">這些是約略的數字，請當成參考，不是嚴謹的使用人數：收集用的網址是公開的、沒有登入驗證，理論上任何人都能送資料進來。只有「整組課程走完」（晚安瑜伽），或「達成目標並儲存」（SlowJog 網頁版與 Android App）才算一次完成，中途離開不算。每一筆只記錄作品、課程、時間與當下的小時，沒有帳號、沒有裝置編號、沒有任何個人資料。SlowJog Android App 可以在「設定」關掉匿名回報；較舊的版本不會回報，所以這裡的數字比實際使用的人少。資料約每分鐘更新一次。</p>
   </div>
 </section>
-<script src="{{ '/assets/js/stats.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/stats.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

@@ -27,8 +27,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Apps Script unit tests
-        run: node apps-script/Code.test.js
+      - name: Apps Script and site unit tests
+        run: |
+          node apps-script/Code.test.js
+          node tests/site.test.js
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

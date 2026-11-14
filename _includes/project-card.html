@@ -38,7 +38,10 @@
     {%- if p.links %}
     <div class="card-links">
       {%- for l in p.links %}
-      <a class="btn{% if forloop.first %} btn-primary{% endif %}" href="{{ l.url }}">{{ l.label }}</a>
+      {%- assign href = l.url -%}
+      {%- assign first_char = href | slice: 0, 1 -%}
+      {%- if first_char == '/' %}{% assign href = href | relative_url %}{% endif -%}
+      <a class="btn{% if forloop.first %} btn-primary{% endif %}" href="{{ href }}">{{ l.label }}</a>
       {%- endfor %}
     </div>
     {%- endif %}

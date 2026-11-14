@@ -38,6 +38,7 @@ layout: default
         {%- endfor %}
       </div>
     </div>
+    <p class="sr-only filters-status" role="status" aria-live="polite"></p>
     <div class="grid">
       {%- for p in projects %}
       {% include project-card.html project=p %}
