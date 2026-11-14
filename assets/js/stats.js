@@ -31,6 +31,12 @@
   var data = null;
   var current = 'night-yoga';
 
+  // 網址後面的 #作品代號 可以直接指定要看哪個作品，例如 /stats/#slowjog
+  function appFromHash() {
+    var id = location.hash.slice(1);
+    return Object.prototype.hasOwnProperty.call(APP_NAME, id) ? id : null;
+  }
+
   var dayFmt = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' });
   var timeFmt = new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -311,13 +317,24 @@
     statusEl.textContent = msg;
   }
 
+  function selectApp(app) {
+    current = app;
+    tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t.dataset.app === app)); });
+    if (data) render();
+  }
+
   tabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
-      current = tab.dataset.app;
-      tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t === tab)); });
-      if (data) render();
+      selectApp(tab.dataset.app);
+      // 把選到的作品寫回網址，重新整理或把網址貼給別人時會停在同一個分頁
+      try { history.replaceState(null, '', '#' + current); } catch (e) {}
     });
   });
+  window.addEventListener('hashchange', function () {
+    var app = appFromHash();
+    if (app && app !== current) selectApp(app);
+  });
+  if (appFromHash()) selectApp(appFromHash());
 
   // 視窗寬度改變（轉向、縮放）時重畫，圖才會貼合新的寬度
   var lastWidth = window.innerWidth;
