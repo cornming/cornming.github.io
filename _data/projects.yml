@@ -51,12 +51,12 @@
     - label: 原始碼
       url: https://github.com/cornming/dingdong-mart
 
-- name: 3D 魔物獵人 Web 原型
+- name: 蒼林狩獵誌
   en: mh-3d-web
   categories: [game, web]
   summary: 用 Three.js 和 Web Audio API 做的純前端 3D 動作遊戲原型，不用 Node.js、不用建置工具，打開網頁就能玩。
   highlights:
-    - 大劍和雙劍兩種武器可以切換，有輕攻擊連段、依蓄力時間分級的重斬、翻滾無敵時間，還有回覆藥和砥石
+    - 大劍和雙劍兩種武器可以切換，有輕攻擊連段、依蓄力時間分級的重斬、翻滾無敵時間，還有回復藥和砥石
     - 魔物會追蹤玩家，有甩尾、龍吼和狂暴狀態，頭、角、尾巴都可以被破壞
     - 模型是用 Blender 腳本產生的 GLB，音效全部用 Web Audio API 即時合成，沒有外部音檔
     - 鍵盤、滑鼠、觸控按鈕都能操作，支援目標鎖定與自由視角；戰績存在 localStorage
@@ -138,6 +138,8 @@
   icon: "🗺️"
   accent: "#f97316"
   links:
+    - label: 下載 APK
+      url: https://github.com/cornming/WalkAdventure/releases
     - label: 原始碼
       url: https://github.com/cornming/WalkAdventure
 
