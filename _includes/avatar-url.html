@@ -1,0 +1,11 @@
+{%- comment -%}
+  輸出頭像網址。GitHub 頭像的原圖是 460×460（約 45 KB），網站上最大只顯示 128px，
+  所以加上 s 參數請 GitHub 回傳縮小的版本。用法：{% include avatar-url.html size=256 %}
+  頭像不是放在 GitHub 時（_config.yml 的 author.avatar 換成別的網址），原樣輸出。
+{%- endcomment -%}
+{%- assign avatar = site.author.avatar -%}
+{%- if avatar contains 'avatars.githubusercontent.com' -%}
+  {{- avatar -}}{%- if avatar contains '?' -%}&amp;{%- else -%}?{%- endif -%}s={{- include.size | default: 256 -}}
+{%- else -%}
+  {{- avatar -}}
+{%- endif -%}

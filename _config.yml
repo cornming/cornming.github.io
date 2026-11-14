@@ -20,7 +20,7 @@ author:
 logo: https://avatars.githubusercontent.com/u/19969233?v=4
 
 # ── 使用統計 ─────────────────────────────────
-# 晚安瑜伽、SlowJog 網頁版「完成一次」時，會把匿名的一筆紀錄送到這個 Google Apps Script，
+# 晚安瑜伽、SlowJog 網頁版與 SlowJog Android「完成一次」時，會把匿名的一筆紀錄送到這個 Google Apps Script，
 # /stats/ 頁面再從同一個網址讀回統計。程式碼與部署步驟見 apps-script/README.md。
 stats_endpoint: "https://script.google.com/macros/s/AKfycbzN1cM7oU-eeatBeISxnm3n8CbYiQej-aOfmIGljFUAAFmRtcP-9NruWs8_RMkhsSpkVA/exec"
 
@@ -51,3 +51,4 @@ exclude:
   - vendor
   - .jekyll-cache
   - apps-script
+  - tests

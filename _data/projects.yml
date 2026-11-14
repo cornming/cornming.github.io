@@ -86,7 +86,7 @@
     - label: 網頁版
       url: https://slowjog.netlify.app/
     - label: 使用統計
-      url: /stats/
+      url: /stats/#slowjog
     - label: 下載 APK
       url: https://github.com/cornming/slowjog/releases
 
@@ -106,7 +106,7 @@
     - label: 線上試用
       url: https://night-yoga.netlify.app/
     - label: 使用統計
-      url: /stats/
+      url: /stats/#night-yoga
 
 - name: lens-tag
   categories: [android]

@@ -36,7 +36,18 @@
 
 ## 使用統計
 
-[`/stats/`](stats/index.html) 顯示晚安瑜伽、SlowJog 網頁版的匿名完成統計（累計次數、使用時段、課程排行榜）。資料收在一份 Google 試算表，由 Apps Script 收集與提供，程式碼和重新部署的步驟在 [`apps-script/`](apps-script/README.md)，網址設定在 `_config.yml` 的 `stats_endpoint`。
+[`/stats/`](stats/index.html) 顯示晚安瑜伽、SlowJog 網頁版與 SlowJog Android 的匿名完成統計（累計次數、使用時段、課程排行榜）。資料收在一份 Google 試算表，由 Apps Script 收集與提供，程式碼和重新部署的步驟在 [`apps-script/`](apps-script/README.md)，網址設定在 `_config.yml` 的 `stats_endpoint`。
+
+網址後面加上作品代號可以直接開到那個作品的分頁：`/stats/#night-yoga`、`/stats/#slowjog`、`/stats/#slowjog-android`。作品卡片的「使用統計」按鈕就是用這種連結。
+
+## 發 PR 時的自動檢查
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) 會在 PR 上執行：
+- `node apps-script/Code.test.js`（Google Apps Script 單元測試）
+- `node tests/site.test.js`（統計計算模組與作品／圖片資料一致性檢查）
+- `bundle exec jekyll build`（確認 `_data/*.yml` 與 Liquid 樣板可正常建置）
+
+CI 只做檢查、不負責部署，網站仍由 GitHub Pages 自動建置。
 
 ## 修改個人資訊
 

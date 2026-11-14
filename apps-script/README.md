@@ -37,7 +37,7 @@ SlowJog 的聲音測試頁（`audio-test.html`、`bg-audio-test.html`）有一�
 
 ## 檔案
 
-- [`Code.gs`](Code.gs)：貼進試算表的 Apps Script。完成統計只接受已知的作品與課程代號、小時 0 到 23，全站每分鐘最多收 30 筆；診斷紀錄見上一節。
+- [`Code.gs`](Code.gs)：貼進試算表的 Apps Script。完成統計只接受已知的作品與課程代號、整數小時 0 到 23，並在鎖定內計算全站每分鐘上限（30 筆）；快取裡的 `byDay` 僅保留近期 45 天以符合 CacheService 大小限制（`total`、`byHour`、`byCourse` 仍保留全期累計）。診斷紀錄見上一節。
 - [`Code.test.js`](Code.test.js)：`Code.gs` 的單元測試（Node，模擬 Apps Script 環境）。
 - 資料存在一份 Google 試算表的第一個分頁，欄位順序：時間、作品、課程、小時。
 
@@ -45,7 +45,7 @@ SlowJog 的聲音測試頁（`audio-test.html`、`bg-audio-test.html`）有一�
 
 1. 開試算表，選「擴充功能 → Apps Script」，把 `Code.gs` 整份貼進去存檔。
 2. 「部署 → 新增部署作業 → 網頁應用程式」，執行身分選「我」，誰可以存取選「所有人」。
-3. 複製 `/exec` 結尾的網址，更新三個地方：
+3. 複製 `/exec` 結尾的網址，更新四個地方：
    - [`_config.yml`](../_config.yml) 的 `stats_endpoint`
    - 晚安瑜伽 `src/web.rs` 的 `STATS_URL`
    - SlowJog 網頁版 `web/src/web.rs` 的 `STATS_URL`

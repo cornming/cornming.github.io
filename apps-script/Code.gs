@@ -19,13 +19,14 @@ const ALLOWED_PATTERNS = {
   'night-yoga': /^lying-0[1-7]$/
 };
 function courseAllowed_(app, course) {
-  if (!ALLOWED[app]) return false;
+  if (!Object.prototype.hasOwnProperty.call(ALLOWED, app)) return false;
   if (ALLOWED[app].indexOf(course) >= 0) return true;
-  const re = ALLOWED_PATTERNS[app];
+  const re = Object.prototype.hasOwnProperty.call(ALLOWED_PATTERNS, app) ? ALLOWED_PATTERNS[app] : null;
   return !!(re && re.test(course));
 }
-const MAX_PER_MINUTE = 30;   // 全站每分鐘最多收幾筆，避免被大量灌數字
-const CACHE_SECONDS = 60;    // 統計結果快取幾秒
+const MAX_PER_MINUTE = 30;     // 全站每分鐘最多收幾筆，避免被大量灌數字
+const CACHE_SECONDS = 60;      // 統計結果快取幾秒
+const BY_DAY_RETENTION_DAYS = 45; // byDay 僅保留近期天數，避免快取 JSON 隨時間逼近 CacheService 100KB 上限
 
 const DIAG_SHEET = '診斷紀錄';
 const DIAG_MAX_ROWS = 3000;       // 診斷分頁最多幾列，滿了就停止收（避免被灌）
@@ -41,23 +42,23 @@ function out_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// 診斷紀錄：只寫進另一個分頁。run、page 只留英數字，內容前面固定加「> 」：
-// 試算表會把「=」開頭的文字當成公式（例如 =IMPORTXML 可以把資料送到外面），所以不能讓內容以「=」開頭。
+// 診斷紀錄：只寫進另一個分頁。run、page 只留安全字元（並去除前導公式符號），內容前面固定加「> 」：
+// 試算表會把「=」「+」「-」「@」開頭的文字當成公式（例如 =IMPORTXML 可以把資料送到外面）。
 function diag_(d) {
-  const run = String(d.run || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 16);
-  const page = String(d.page || '').replace(/[^A-Za-z0-9_.-]/g, '').slice(0, 32);
+  const run = String(d.run || '').replace(/[^A-Za-z0-9_-]/g, '').replace(/^[-+=@]+/, '').slice(0, 16);
+  const page = String(d.page || '').replace(/[^A-Za-z0-9_.-]/g, '').replace(/^[-+=@]+/, '').slice(0, 32);
   const text = String(d.text || '').slice(0, DIAG_MAX_TEXT);
   if (!run || !text) return out_({ ok: false });
-
-  const cache = CacheService.getScriptCache();
-  const key = 'diag_' + Math.floor(Date.now() / 60000);
-  const n = Number(cache.get(key) || 0);
-  if (n >= DIAG_MAX_PER_MINUTE) return out_({ ok: false, error: 'busy' });
-  cache.put(key, String(n + 1), 120);
 
   const lock = LockService.getScriptLock();
   lock.waitLock(5000);
   try {
+    const cache = CacheService.getScriptCache();
+    const key = 'diag_' + Math.floor(Date.now() / 60000);
+    const n = Number(cache.get(key) || 0);
+    if (n >= DIAG_MAX_PER_MINUTE) return out_({ ok: false, error: 'busy' });
+    cache.put(key, String(n + 1), 120);
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     let sh = ss.getSheetByName(DIAG_SHEET);
     if (!sh) {
@@ -76,28 +77,33 @@ function diag_(d) {
 // 網頁在使用者「完成一次」時呼叫
 function doPost(e) {
   try {
+    if (!e || !e.postData || typeof e.postData.contents !== 'string') return out_({ ok: false });
     const d = JSON.parse(e.postData.contents);
-    if (d && d.type === 'diag') return diag_(d);
-    const app = String(d.app || '');
-    const course = String(d.course || '');
-    const hour = Number(d.hour);
-    if (!courseAllowed_(app, course)) return out_({ ok: false });
-    if (!Number.isInteger(hour) || hour < 0 || hour > 23) return out_({ ok: false });
+    if (!d || typeof d !== 'object') return out_({ ok: false });
+    if (d.type === 'diag') return diag_(d);
 
-    const cache = CacheService.getScriptCache();
-    const key = 'rate_' + Math.floor(Date.now() / 60000);
-    const n = Number(cache.get(key) || 0);
-    if (n >= MAX_PER_MINUTE) return out_({ ok: false, error: 'busy' });
-    cache.put(key, String(n + 1), 120);
+    const app = typeof d.app === 'string' ? d.app : '';
+    const course = d.course == null ? '' : (typeof d.course === 'string' ? d.course : null);
+    if (course === null) return out_({ ok: false });
+    if (typeof d.hour !== 'number' || !Number.isInteger(d.hour) || d.hour < 0 || d.hour > 23) {
+      return out_({ ok: false });
+    }
+    if (!courseAllowed_(app, course)) return out_({ ok: false });
 
     const lock = LockService.getScriptLock();
     lock.waitLock(5000);
     try {
-      sheet_().appendRow([new Date(), app, course, hour]);
+      const cache = CacheService.getScriptCache();
+      const key = 'rate_' + Math.floor(Date.now() / 60000);
+      const n = Number(cache.get(key) || 0);
+      if (n >= MAX_PER_MINUTE) return out_({ ok: false, error: 'busy' });
+      cache.put(key, String(n + 1), 120);
+
+      sheet_().appendRow([new Date(), app, course, d.hour]);
+      cache.remove('stats');
     } finally {
       lock.releaseLock();
     }
-    cache.remove('stats');
     return out_({ ok: true });
   } catch (err) {
     return out_({ ok: false });
@@ -106,13 +112,43 @@ function doPost(e) {
 
 // 統計頁讀取統計資料
 function doGet() {
-  const cache = CacheService.getScriptCache();
-  let s = cache.get('stats');
-  if (!s) {
-    s = JSON.stringify(buildStats_());
-    cache.put('stats', s, CACHE_SECONDS);
+  try {
+    const cache = CacheService.getScriptCache();
+    let s = cache.get('stats');
+    if (!s) {
+      const lock = LockService.getScriptLock();
+      const locked = typeof lock.tryLock === 'function' ? lock.tryLock(3000) : (lock.waitLock(3000), true);
+      try {
+        s = cache.get('stats');
+        if (!s) {
+          s = JSON.stringify(buildStats_());
+          try {
+            cache.put('stats', s, CACHE_SECONDS);
+          } catch (cacheErr) {
+            // 快取寫入失敗（例如超過 100KB 上限）時仍正常回傳統計 JSON
+          }
+        }
+      } finally {
+        if (locked) lock.releaseLock();
+      }
+    }
+    return ContentService.createTextOutput(s).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return out_({ error: 'unavailable' });
   }
-  return ContentService.createTextOutput(s).setMimeType(ContentService.MimeType.JSON);
+}
+
+function parseHourCell_(val) {
+  if (typeof val === 'number') {
+    return Number.isInteger(val) && val >= 0 && val <= 23 ? val : -1;
+  }
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (!/^\d{1,2}$/.test(trimmed)) return -1;
+    const n = Number(trimmed);
+    return n >= 0 && n <= 23 ? n : -1;
+  }
+  return -1;
 }
 
 function buildStats_() {
@@ -122,18 +158,31 @@ function buildStats_() {
     apps[a] = { total: 0, byHour: new Array(24).fill(0), byCourse: {}, byDay: {} };
     ALLOWED[a].forEach(function (c) { if (c) apps[a].byCourse[c] = 0; });
   });
+  const cutoffMs = Date.now() - BY_DAY_RETENTION_DAYS * 864e5;
+  const cutoffDay = Utilities.formatDate(new Date(cutoffMs), 'Asia/Taipei', 'yyyy-MM-dd');
+
   rows.forEach(function (r) {
+    if (!Array.isArray(r) || typeof r[1] !== 'string') return;
+    if (!Object.prototype.hasOwnProperty.call(apps, r[1])) return;
     const a = apps[r[1]];
-    if (!a) return;
     a.total++;
-    const h = Number(r[3]);
-    if (h >= 0 && h <= 23) a.byHour[h]++;
-    const c = String(r[2] || '');
-    if (c && courseAllowed_(r[1], c)) a.byCourse[c] = (a.byCourse[c] || 0) + 1;
-    const t = r[0] instanceof Date ? r[0] : new Date(r[0]);
-    if (!isNaN(t)) {
+    const h = parseHourCell_(r[3]);
+    if (h >= 0) a.byHour[h]++;
+    const c = typeof r[2] === 'string' ? r[2] : '';
+    if (c && courseAllowed_(r[1], c)) {
+      a.byCourse[c] = (Object.prototype.hasOwnProperty.call(a.byCourse, c) ? a.byCourse[c] : 0) + 1;
+    }
+    let t = null;
+    if (r[0] instanceof Date || Object.prototype.toString.call(r[0]) === '[object Date]') {
+      t = r[0];
+    } else if (typeof r[0] === 'string' && r[0].trim() !== '') {
+      t = new Date(r[0]);
+    }
+    if (t && !isNaN(t)) {
       const day = Utilities.formatDate(t, 'Asia/Taipei', 'yyyy-MM-dd');
-      a.byDay[day] = (a.byDay[day] || 0) + 1;
+      if (day >= cutoffDay) {
+        a.byDay[day] = (a.byDay[day] || 0) + 1;
+      }
     }
   });
   return { updated: new Date().toISOString(), apps: apps };

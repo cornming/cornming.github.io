@@ -4,7 +4,7 @@ layout: default
 {%- assign projects = site.data.projects -%}
 <section class="hero">
   <div class="container hero-inner">
-    <img class="avatar" src="{{ site.author.avatar }}" alt="{{ site.author.name }} 的頭像" width="112" height="112">
+    <img class="avatar" src="{% include avatar-url.html size=256 %}" alt="{{ site.author.name }} 的頭像" width="112" height="112">
     <div>
       <p class="eyebrow">{{ site.author.location }} · GitHub @{{ site.author.github }}</p>
       <h1>有靈感，就跟 AI 一起把它做出來</h1>
@@ -38,6 +38,7 @@ layout: default
         {%- endfor %}
       </div>
     </div>
+    <p class="sr-only filters-status" role="status" aria-live="polite"></p>
     <div class="grid">
       {%- for p in projects %}
       {% include project-card.html project=p %}

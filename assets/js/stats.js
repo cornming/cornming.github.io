@@ -1,9 +1,6 @@
 // 使用統計頁：從 Google Apps Script 讀回匿名的完成統計，畫成圖表。
 // 所有文字一律用 textContent 寫入，不拼 innerHTML。
 (function () {
-  var root = document.querySelector('.stats');
-  if (!root) return;
-
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var APP_NAME = { 'night-yoga': '晚安瑜伽', 'slowjog': 'SlowJog 網頁版', 'slowjog-android': 'SlowJog Android' };
   var APP_URL = {
@@ -24,15 +21,59 @@
     { name: '晚上', range: '18 到 23 點', from: 18, to: 23 }
   ];
 
+  var dayFmt = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' });
+  var timeFmt = new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+
+  function hasOwn(obj, key) {
+    return !!obj && Object.prototype.hasOwnProperty.call(obj, key);
+  }
+  function numOrZero(v) {
+    var n = typeof v === 'number' ? v : Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : 0;
+  }
+  function fmt(n) { return numOrZero(n).toLocaleString('zh-TW'); }
+  function pct(n, total) { return total > 0 ? Math.round((n / total) * 100) : 0; }
+  function sum(a) { return a.reduce(function (x, y) { return x + numOrZero(y); }, 0); }
+
+  // 網址後面的 #作品代號 可以直接指定要看哪個作品，例如 /stats/#slowjog
+  function appFromHash(hash) {
+    var id = String(hash || '').replace(/^#/, '');
+    return hasOwn(APP_NAME, id) ? id : null;
+  }
+
+  // 最近 n 天的日期（台北時間），由舊到新
+  function lastDays(n, nowMs) {
+    var out = [];
+    var now = typeof nowMs === 'number' ? nowMs : Date.now();
+    for (var i = n - 1; i >= 0; i--) out.push(dayFmt.format(new Date(now - i * 864e5)));
+    return out;
+  }
+
+  // 圖的上限取整齊的數字：20 以內是 4 的倍數，其餘取 1、2、5 的倍數，這樣中間的刻度一定是整數
+  function niceMax(m) {
+    if (!Number.isFinite(m) || m <= 4) return 4;
+    if (m <= 20) return Math.ceil(m / 4) * 4;
+    var p = Math.pow(10, Math.floor(Math.log10(m)));
+    var f = m / p;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+  }
+
+  // 匯出純函式給單元測試（Node 環境沒有 .stats 容器，不會執行下面的瀏覽器邏輯）
+  if (typeof module === 'object' && module.exports) {
+    module.exports = { appFromHash: appFromHash, lastDays: lastDays, niceMax: niceMax, numOrZero: numOrZero, pct: pct, sum: sum };
+  }
+  if (typeof document === 'undefined') return;
+
+  var root = document.querySelector('.stats');
+  if (!root) return;
+
   var statusEl = root.querySelector('.stats-status');
   var bodyEl = root.querySelector('.stats-body');
   var updatedEl = document.getElementById('stats-updated');
   var tabs = root.querySelectorAll('.stats-tabs .chip');
   var data = null;
   var current = 'night-yoga';
-
-  var dayFmt = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' });
-  var timeFmt = new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+  var tipSeq = 0;
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -49,36 +90,31 @@
   }
 
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
-  function fmt(n) { return Number(n).toLocaleString('zh-TW'); }
-  function pct(n, total) { return total ? Math.round((n / total) * 100) : 0; }
-  function sum(a) { return a.reduce(function (x, y) { return x + y; }, 0); }
 
-  // 最近 n 天的日期（台北時間），由舊到新
-  function lastDays(n) {
-    var out = [];
-    var now = Date.now();
-    for (var i = n - 1; i >= 0; i--) out.push(dayFmt.format(new Date(now - i * 864e5)));
-    return out;
+  function hideAllTips() {
+    root.querySelectorAll('.stats-tip').forEach(function (tip) { tip.hidden = true; });
   }
 
-  // 圖的上限取整齊的數字：20 以內是 4 的倍數，其餘取 1、2、5 的倍數，這樣中間的刻度一定是整數
-  function niceMax(m) {
-    if (m <= 4) return 4;
-    if (m <= 20) return Math.ceil(m / 4) * 4;
-    var p = Math.pow(10, Math.floor(Math.log10(m)));
-    var f = m / p;
-    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
-  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') hideAllTips();
+  });
 
-  // ───────── tooltip：一張卡片一個，滑鼠與鍵盤焦點都會顯示 ─────────
-  function attachTip(card, target, text) {
+  // ───────── tooltip：一張卡片一個，滑鼠、觸控與鍵盤焦點都會顯示 ─────────
+  function ensureCardTip(card) {
     var tip = card.querySelector('.stats-tip');
     if (!tip) {
       tip = el('div', 'stats-tip');
       tip.hidden = true;
+      tip.id = 'stats-tip-' + (++tipSeq);
       tip.setAttribute('role', 'tooltip');
       card.appendChild(tip);
     }
+    return tip;
+  }
+
+  function attachTip(card, target, text) {
+    var tip = ensureCardTip(card);
+    target.setAttribute('aria-describedby', tip.id);
     function show() {
       tip.textContent = text;
       tip.hidden = false;
@@ -88,13 +124,20 @@
       var w = tip.offsetWidth;
       x = Math.max(w / 2 + 4, Math.min(c.width - w / 2 - 4, x));
       tip.style.left = x + 'px';
-      tip.style.top = (r.top - c.top - tip.offsetHeight - 6) + 'px';
+      tip.style.top = Math.max(4, r.top - c.top - tip.offsetHeight - 6) + 'px';
     }
     function hide() { tip.hidden = true; }
     target.addEventListener('pointerenter', show);
     target.addEventListener('pointerleave', hide);
     target.addEventListener('focus', show);
     target.addEventListener('blur', hide);
+    target.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (tip.hidden || tip.textContent !== text) show();
+        else hide();
+      }
+    });
   }
 
   // ───────── 直條圖（每天、每小時共用）─────────
@@ -102,15 +145,16 @@
   function columnChart(container, items, summary) {
     clear(container);
     var card = container.closest('.stats-card');
-    // 依容器的實際寬度畫，文字才不會在手機上被縮得看不清楚
-    var W = Math.max(300, Math.round(container.clientWidth || 720)), H = 230, L = 34, R = 6, T = 22, B = 28;
-    var pw = W - L - R, ph = H - T - B;
     var max = Math.max.apply(null, items.map(function (i) { return i.value; }));
     var top = niceMax(max);
+    // 左側邊距依最大刻度字元數動態展開，避免四位數以上被截掉
+    var L = Math.max(34, 14 + fmt(top).length * 7);
+    var W = Math.max(300, Math.round(container.clientWidth || 720)), H = 230, R = 6, T = 22, B = 28;
+    var pw = W - L - R, ph = H - T - B;
     var slot = pw / items.length;
     var barW = Math.min(24, slot * 0.62);
 
-    var s = svg('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': summary, class: 'stats-svg' });
+    var s = svg('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'group', 'aria-label': summary, class: 'stats-svg' });
 
     [0, top / 2, top].forEach(function (t) {
       var y = T + ph - (t / top) * ph;
@@ -141,7 +185,7 @@
       // 比長條大的透明感應區：整個欄位寬、整個繪圖區高
       var hit = svg('rect', {
         x: cx - slot / 2, y: T, width: slot, height: ph, class: 'hit', tabindex: '0',
-        'aria-label': it.tip
+        role: 'button', 'aria-label': it.tip
       });
       g.appendChild(hit);
       s.appendChild(g);
@@ -161,17 +205,22 @@
     rows.forEach(function (r, i) {
       var li = el('li', 'rank-row');
       li.tabIndex = 0;
+      var tipText = r.label + '：' + fmt(r.value) + ' 次，占 ' + pct(r.value, total) + '%';
+      li.setAttribute('aria-label', '第 ' + (i + 1) + ' 名，' + tipText);
       li.appendChild(el('span', 'rank-no', String(i + 1)));
       li.appendChild(el('span', 'rank-name', r.label));
-      // 數值貼在長條末端：長條寬度 = 可用寬度 × 比例，數值跟在後面
       var track = el('span', 'rank-track');
+      var fill = el('span', 'rank-fill');
+      fill.setAttribute('aria-hidden', 'true');
       var bar = el('span', 'rank-bar');
-      track.style.setProperty('--w', String(max ? Math.max(r.value / max, r.value > 0 ? 0.02 : 0) : 0));
-      track.appendChild(bar);
+      var ratio = max > 0 ? Math.max(r.value / max, r.value > 0 ? 0.02 : 0) : 0;
+      fill.style.setProperty('--w', String(ratio));
+      fill.appendChild(bar);
+      track.appendChild(fill);
       track.appendChild(el('span', 'rank-val', fmt(r.value) + ' 次（' + pct(r.value, total) + '%）'));
       li.appendChild(track);
       list.appendChild(li);
-      attachTip(card, li, r.label + '：' + fmt(r.value) + ' 次，占 ' + pct(r.value, total) + '%');
+      attachTip(card, li, tipText);
     });
     container.appendChild(list);
   }
@@ -206,6 +255,7 @@
   // ───────── 組畫面 ─────────
   // 資料格式怪異（欄位缺漏、型別不對）時，不要留下畫到一半的圖，改顯示一句說明
   function render() {
+    hideAllTips();
     try {
       renderChecked();
     } catch (e) {
@@ -214,11 +264,13 @@
   }
 
   function renderChecked() {
-    var a = data && data.apps && data.apps[current];
+    if (!hasOwn(APP_NAME, current)) { showStatus('找不到這個作品的統計。'); return; }
+    var a = data && data.apps && hasOwn(data.apps, current) ? data.apps[current] : null;
     if (!a) { showStatus('這個作品目前沒有資料。'); return; }
     if (!Array.isArray(a.byHour) || a.byHour.length !== 24) throw new Error('bad byHour');
 
-    if (!a.total) {
+    var total = numOrZero(a.total);
+    if (!total) {
       bodyEl.hidden = true;
       clear(statusEl);
       statusEl.hidden = false;
@@ -227,6 +279,7 @@
       link.href = APP_URL[current];
       statusEl.appendChild(document.createTextNode(' '));
       statusEl.appendChild(link);
+      updatedEl.textContent = '';
       return;
     }
     statusEl.hidden = true;
@@ -234,15 +287,16 @@
 
     var days = lastDays(30);
     var byDay = a.byDay || {};
-    var dayVals = days.map(function (d) { return byDay[d] || 0; });
+    var dayVals = days.map(function (d) { return hasOwn(byDay, d) ? numOrZero(byDay[d]) : 0; });
     var last7 = sum(dayVals.slice(-7));
-    var hours = a.byHour || [];
+    var hours = a.byHour.map(numOrZero);
+    var hoursTotal = sum(hours) || total;
     var peak = hours.reduce(function (best, v, i) { return v > hours[best] ? i : best; }, 0);
 
     // 重點數字
     var tiles = document.getElementById('stats-tiles');
     clear(tiles);
-    tiles.appendChild(tile('累計完成', fmt(a.total) + ' 次'));
+    tiles.appendChild(tile('累計完成', fmt(total) + ' 次'));
     tiles.appendChild(tile('最近 7 天', fmt(last7) + ' 次'));
     tiles.appendChild(tile('最多人完成的時段', peak + ' 到 ' + ((peak + 1) % 24) + ' 點', '共 ' + fmt(hours[peak]) + ' 次'));
 
@@ -267,9 +321,9 @@
     });
     var best = shares.reduce(function (b, s) { return s.v > b.v ? s : b; }, shares[0]);
     document.getElementById('insight-hours').textContent =
-      '「' + best.p.name + '」（' + best.p.range + '）最多，占 ' + pct(best.v, a.total) + '%。' +
+      '「' + best.p.name + '」（' + best.p.range + '）最多，占 ' + pct(best.v, hoursTotal) + '%。' +
       shares.filter(function (s) { return s !== best; }).map(function (s) {
-        return s.p.name + ' ' + pct(s.v, a.total) + '%';
+        return s.p.name + ' ' + pct(s.v, hoursTotal) + '%';
       }).join('、') + '。';
 
     // 課程排行榜（只有有固定課程的作品才有）
@@ -279,8 +333,9 @@
     var rows = [];
     if (courseKeys.length) {
       courseCard.hidden = false;
-      rows = courseKeys.map(function (k) { return { label: COURSE_NAME[k] || k, value: courses[k] }; })
-        .sort(function (x, y) { return y.value - x.value; });
+      rows = courseKeys.map(function (k) {
+        return { label: hasOwn(COURSE_NAME, k) ? COURSE_NAME[k] : k, value: numOrZero(courses[k]) };
+      }).sort(function (x, y) { return y.value - x.value; });
       rankChart(document.getElementById('chart-courses'), rows);
     } else {
       courseCard.hidden = true;
@@ -301,23 +356,39 @@
     // 更新時間
     if (data.updated) {
       var t = new Date(data.updated);
-      if (!isNaN(t)) updatedEl.textContent = '資料更新於 ' + timeFmt.format(t) + '（台北時間）';
+      updatedEl.textContent = !isNaN(t) ? '資料更新於 ' + timeFmt.format(t) + '（台北時間）' : '';
+    } else {
+      updatedEl.textContent = '';
     }
   }
 
   function showStatus(msg) {
+    hideAllTips();
     bodyEl.hidden = true;
     statusEl.hidden = false;
     statusEl.textContent = msg;
+    updatedEl.textContent = '';
+  }
+
+  function selectApp(app) {
+    current = app;
+    tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t.dataset.app === app)); });
+    if (data) render();
   }
 
   tabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
-      current = tab.dataset.app;
-      tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t === tab)); });
-      if (data) render();
+      selectApp(tab.dataset.app);
+      // 把選到的作品寫回網址，重新整理或把網址貼給別人時會停在同一個分頁
+      try { history.replaceState(null, '', '#' + current); } catch (e) {}
     });
   });
+  window.addEventListener('hashchange', function () {
+    var app = appFromHash(location.hash);
+    if (app && app !== current) selectApp(app);
+  });
+  var initialApp = appFromHash(location.hash);
+  if (initialApp) selectApp(initialApp);
 
   // 視窗寬度改變（轉向、縮放）時重畫，圖才會貼合新的寬度
   var lastWidth = window.innerWidth;
@@ -339,6 +410,11 @@
       if (!r.ok) throw new Error('http ' + r.status);
       return r.json();
     })
-    .then(function (j) { clearTimeout(timer); data = j; render(); })
+    .then(function (j) {
+      clearTimeout(timer);
+      if (j && j.error) { showStatus('暫時讀不到統計資料，請稍後再試。'); return; }
+      data = j;
+      render();
+    })
     .catch(function () { clearTimeout(timer); showStatus('暫時讀不到統計資料，請稍後再試。'); });
 })();
