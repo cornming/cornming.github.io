@@ -16,6 +16,24 @@
 #   links       按鈕：label 是文字，url 是網址；第一個會是主要按鈕（選填）
 # ─────────────────────────────────────────────────────────────
 
+- name: 軟體人情報站
+  en: dev-intel
+  categories: [web]
+  summary: 每 5 小時自動更新的軟體開發情報頁，把台灣與國際的科技新聞、開源新星專案和職場討論彙整在同一頁。
+  highlights:
+    - 彙整 Hacker News、Lobsters、DEV、GitHub 新星專案、iThome、科技新報、TechOrange、PTT Soft_Job 等來源
+    - 每日台北時間 00:00、05:00、10:00、15:00、20:00 由 GitHub Actions 自動抓取並發布
+    - 不需要 API 金鑰、不用伺服器、沒有第三方套件；依來源分數與發布時間排名，不經過 AI 改寫
+    - 可依地區、主題、來源篩選與搜尋，任一來源故障時沿用舊資料
+  tech: [JavaScript, Node.js, GitHub Actions, GitHub Pages]
+  icon: "📡"
+  accent: "#2563eb"
+  links:
+    - label: 開啟情報站
+      url: https://cornming.github.io/dev-intel/
+    - label: 原始碼
+      url: https://github.com/cornming/dev-intel
+
 - name: Pixel 螢幕即時翻譯
   en: pixel-screen-translate
   status: v0.4.0
