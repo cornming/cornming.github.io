@@ -54,8 +54,17 @@
       if (status) {
         status.textContent = f === 'all'
           ? '顯示全部 ' + shown + ' 件作品'
-          : '分類「' + chip.textContent + '」共顯示 ' + shown + ' 件作品';
+          : '分類「' + (chip.dataset.label || chip.textContent) + '」共顯示 ' + shown + ' 件作品';
       }
     });
   });
+})();
+
+// 作品卡片的「功能重點」：HTML 預設展開（沒有 JS 也看得到），窄螢幕改成收合，手機上不用滑過十幾張長卡片
+(function () {
+  var boxes = document.querySelectorAll('.highlights-box');
+  if (!boxes.length || typeof window.matchMedia !== 'function') return;
+  if (window.matchMedia('(max-width: 719px)').matches) {
+    boxes.forEach(function (d) { d.open = false; });
+  }
 })();

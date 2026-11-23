@@ -19,20 +19,70 @@
 - name: 軟體人情報站
   en: dev-intel
   categories: [web]
-  summary: 每 5 小時自動更新的軟體開發情報頁，把台灣與國際的科技新聞、開源新星專案和職場討論彙整在同一頁。
+  summary: 每 5 小時自動更新的軟體開發情報頁，把台灣與國際的科技新聞、開源新星專案和職場討論彙整在同一頁，首頁是看產業與公司「關注度」的儀表板。
   highlights:
-    - 彙整 Hacker News、Lobsters、DEV、GitHub 新星專案、iThome、科技新報、TechOrange、PTT Soft_Job 等來源
-    - 每日台北時間 00:00、05:00、10:00、15:00、20:00 由 GitHub Actions 自動抓取並發布
-    - 不需要 API 金鑰、不用伺服器、沒有第三方套件；依來源分數與發布時間排名，不經過 AI 改寫
-    - 可依地區、主題、來源篩選與搜尋，任一來源故障時沿用舊資料
-  tech: [JavaScript, Node.js, GitHub Actions, GitHub Pages]
-  icon: "📡"
-  accent: "#2563eb"
+    - 彙整 Hacker News、Lobsters、DEV、GitHub 新星專案、GitHub Blog、iThome、科技新報、TechOrange 等來源，每日台北時間 00:00、05:00、10:00、15:00、20:00 由 GitHub Actions 自動抓取並發布
+    - 儀表板列出產業關注度、公司排行、台灣與國際落差；每個數字都能點開看背後的原始文章
+    - 「今日重點」由 Claude 排程任務只依標題與統計產生，發布前先經程式嚴格驗證；「資安與版本」直接用 CISA KEV 與 endoflife.date 官方資料
+    - 各分類都有 Atom／RSS 訂閱；篩選狀態記在網址，任一來源故障時沿用舊資料
+  tech: [JavaScript, Node.js, GitHub Actions, GitHub Pages, Claude]
+  image: /assets/img/projects/dev-intel.jpg
   links:
     - label: 開啟情報站
       url: https://cornming.github.io/dev-intel/
     - label: 原始碼
       url: https://github.com/cornming/dev-intel
+
+- name: IC 卡控制
+  en: ic-card-home
+  status: v0.3.1
+  categories: [android]
+  summary: 用手機 NFC 讀家裡閒置的 IC 卡，依對照表控制 Google Home 裡的開關類裝置。已在現場實測：刷卡、按下確認後，大門的繼電器確實點動開門。
+  highlights:
+    - 預設「試運行」只寫記錄；名稱含「門、鎖」的裝置預設擋下，門禁類裝置刷卡後先跳確認視窗，10 秒沒確認就取消
+    - 程式裡只用 OnOff（開關）功能，沒有任何送出鎖定或解鎖的路徑；同一張卡 2 秒內重複感應只算一次
+    - App 沒開時刷卡，由系統叫起 App 走同一條流程；只採用系統送來的 Tag 物件，不信任 intent 自帶的 ID
+    - App 內檢查 GitHub Release，下載後驗證套件名稱、版本與簽章才交給系統安裝
+  tech: [Kotlin, Jetpack Compose, NFC, Google Home APIs]
+  icon: "🔑"
+  accent: "#0f766e"
+  links:
+    - label: 下載 APK
+      url: https://github.com/cornming/ic-card-home/releases
+    - label: 原始碼
+      url: https://github.com/cornming/ic-card-home
+
+- name: NFC 讀卡驗證
+  en: nfc-card-lab
+  status: v0.3.2
+  categories: [android]
+  summary: 「IC 卡控制」的前身：先回答手上這張閒置 IC 卡手機讀不讀得到、UID 穩不穩定、能不能拿來當鑰匙，再讓每張登錄的卡各自綁一個動作。
+  highlights:
+    - 刷卡顯示 UID、支援的 NFC 技術、ATQA／SAK、MIFARE Classic 型號，並自動偵測不能拿來辨識的隨機 UID
+    - 穩定性測試連續刷同一張卡；白名單登錄後，每張卡可綁「模擬」或「HTTP POST」動作，各自計算冷卻時間
+    - HTTP POST 的 http:// 只允許區域網路位址；操作紀錄只存在手機，要自己按「複製／匯出紀錄」才會離開手機
+    - 54 個單元測試，包含對本機真實 HTTP 伺服器送出 POST
+  tech: [Kotlin, Android, NFC, GitHub Actions]
+  icon: "📶"
+  accent: "#7c3aed"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/nfc-card-lab
+
+- name: Markdown 快速預覽
+  en: md-preview
+  categories: [desktop]
+  summary: Windows 上的 Markdown 快速預覽：複製路徑、檔名或網址，按 Ctrl+Alt+M 就跳出渲染好的小視窗，不用開編輯器，按 Esc 關閉。
+  highlights:
+    - 吃得下完整路徑、只有檔名（自動搜尋常用資料夾取最新）、GitHub blob 網址與一般 .md 網址
+    - 本機檔案存檔後 1 秒內自動更新並保留捲動位置；支援 Mermaid 圖表與程式碼上色，跟隨系統深淺色
+    - 用 PowerShell 7 內建的 ConvertFrom-Markdown 轉 HTML，小伺服器只聽 127.0.0.1，關窗後 3 秒內自動結束
+  tech: [PowerShell 7, Markdig, Edge, Mermaid, highlight.js]
+  icon: "📝"
+  accent: "#475569"
+  links:
+    - label: 原始碼
+      url: https://github.com/cornming/md-preview
 
 - name: Pixel 螢幕即時翻譯
   en: pixel-screen-translate
@@ -87,9 +137,27 @@
     - label: 原始碼
       url: https://github.com/cornming/mh-3d-web
 
+- name: 三路卡陣
+  en: lane-cards
+  status: v0.6.0
+  categories: [game, web]
+  summary: 致敬 2012 年網頁卡牌遊戲玩法的原創單機版。三條路、每條 10 格的戰場，卡牌待機歸零才能出，召喚的單位會自己前進、自己攻擊，你只決定放哪裡、什麼時候放。
+  highlights:
+    - 戰士、遊俠、法師、牧師四個職業，八種攻擊類型與先制、反擊、飛行、祝福、英勇等能力；角色、卡名、數值和美術全部重新設計
+    - 主城有 5 章 15 關冒險地圖、無限層的試煉之塔、離線也會計時的遠征碼頭和每日任務；收集卡牌自由組牌，重複卡可鍊成升星
+    - 整個遊戲是單一 index.html；32 張卡牌插圖由 Gemini 產生，原創提示詞另外存檔
+    - 推上 main 會先跑電腦對電腦的模擬對戰，再自動加版號、發 Release、部署到 GitHub Pages
+  tech: [JavaScript, HTML, Gemini, GitHub Actions]
+  image: /assets/img/projects/lane-cards.jpg
+  links:
+    - label: 線上玩
+      url: https://cornming.github.io/lane-cards/
+    - label: 原始碼
+      url: https://github.com/cornming/lane-cards
+
 - name: SlowJog
   en: slowjog
-  status: v0.1.31
+  status: v0.1.50
   categories: [android, web]
   summary: 陪你養成「早晨 30 分鐘運動＋超慢跑」習慣的 App。節拍器、階段式課表、語音口令、運動紀錄和習慣分數一次到位，有 Android 版，也有瀏覽器直接用的網頁版。
   highlights:
@@ -145,14 +213,15 @@
 
 - name: 走走冒險
   en: WalkAdventure
-  status: V0.1
+  status: v0.7.0
   categories: [android, game]
-  summary: 「你走的每一步，都是遊戲進度。」用 Android 實際步數驅動的輕量冒險 RPG：走路拿經驗、升級、探索地圖、開寶箱。
+  summary: 「你走的每一步，都是全家的冒險與回憶。」用 Android 實際步數驅動的離線親子冒險 RPG，2.0 版把平日大人走路累積的寶箱和神祕蛋，留到晚上或假日和孩子一起開。
   highlights:
-    - 讀取手機計步感測器（TYPE_STEP_COUNTER）的實際步數
-    - 每 1000 步開寶箱拿金幣，每 500 步觸發一次隨機事件
-    - 不需要 GPS、不需要登入，進度存在手機本機
-  tech: [Java, Android]
+    - 讀取手機計步感測器（TYPE_STEP_COUNTER），App 沒開時走的步數下次打開會補進來，重開機也不會漏算
+    - 五座主題島嶼、10 條連貫繪本故事、24 張分齡的親子「抬頭任務卡」；孵蛋養 12 位旅伴，可以進化、換飾品
+    - 秘密營地建設、走路自動澆水的小菜園；相機尋寶在手機上分析照片顏色，合成可以分享的冒險明信片
+    - 不需要登入，資料全存在手機；足跡探索預設關閉，只用粗略定位且不存精確經緯度
+  tech: [Java, Android, Canvas, GitHub Actions]
   icon: "🗺️"
   accent: "#f97316"
   links:
@@ -164,15 +233,17 @@
 - name: 接片室
   en: vlog-stitch
   categories: [web, android]
-  summary: 在手機上把好幾段影片接成一支，燒上字幕，匯出成可以直接上傳 YouTube 的檔案。有網頁版，也有 Android 原生版。
+  summary: 在手機瀏覽器裡把當天拍的照片和影片剪成一支 vlog：自動排順序、寫字幕草稿，加上照片動態、轉場和配樂，匯出成可以直接上傳 YouTube 的檔案。有網頁版，也有 Android 原生版。
   highlights:
-    - 網頁版只有一個 index.html，沒有後端，影片全程留在手機裡
-    - Whisper 直接在瀏覽器裡跑，自動聽打中、英、日字幕，可匯入匯出 SRT
-    - 三種匯出方式自己選：快速接片、重新編碼、即時錄製
+    - 網頁版只有一個 index.html，沒有後端，照片、影片和聲音全程留在手機裡
+    - Whisper 直接在瀏覽器裡跑，自動聽打中、英、日字幕；也可以用自己的 API key 讓 Claude 看圖寫字幕草稿，可匯入匯出 SRT
+    - 字幕先逐句列出來讓你確認，按下確認才開始轉檔；五種字幕樣式、四種轉場、色調與內建配樂
     - Android 版用 Media3 Transformer 走手機的硬體編解碼器
-  tech: [JavaScript, WebCodecs, Whisper, Kotlin, Media3]
+  tech: [JavaScript, WebCodecs, Whisper, Claude API, Kotlin, Media3]
   image: /assets/img/projects/vlog-stitch.jpg
   links:
+    - label: 線上使用
+      url: https://cornming.github.io/vlog-stitch/
     - label: 下載 Android 版
       url: https://github.com/cornming/vlog-stitch/releases
     - label: 原始碼

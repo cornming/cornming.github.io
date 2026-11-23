@@ -24,11 +24,15 @@
     </h3>
     <p class="summary">{{ p.summary }}</p>
     {%- if p.highlights %}
-    <ul class="highlights">
-      {%- for h in p.highlights %}
-      <li>{{ h }}</li>
-      {%- endfor %}
-    </ul>
+    {%- comment -%} 預設展開；窄螢幕由 site.js 收合，避免手機上整頁過長 {%- endcomment %}
+    <details class="highlights-box" open>
+      <summary>功能重點（{{ p.highlights.size }}）</summary>
+      <ul class="highlights">
+        {%- for h in p.highlights %}
+        <li>{{ h }}</li>
+        {%- endfor %}
+      </ul>
+    </details>
     {%- endif %}
     {%- if p.tech %}
     <ul class="tech" aria-label="使用技術">

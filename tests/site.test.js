@@ -89,6 +89,22 @@ ok('YAML 資料與作品封面圖檔一致且分類鍵存在', () => {
   for (const m of data.more) {
     assert.ok(m.name && m.summary, 'more_projects 每筆都要有 name 與 summary');
   }
+
+  const names = data.projects.map((p) => p.name);
+  const dup = names.filter((n, i) => names.indexOf(n) !== i);
+  assert.deepStrictEqual(dup, [], `作品名稱重複：${dup.join('、')}`);
+
+  for (const p of data.projects) {
+    for (const l of p.links || []) {
+      assert.ok(/^(https:\/\/|\/)/.test(l.url), `${p.name} 的連結「${l.label}」要用 https:// 或站內 / 開頭：${l.url}`);
+    }
+  }
+
+  // 封面圖資料夾裡不該留著沒有作品在用的圖（換圖或刪作品時容易忘記清）
+  const imgDir = path.join(root, 'assets/img/projects');
+  const used = new Set(data.projects.filter((p) => p.image).map((p) => path.basename(p.image)));
+  const orphans = fs.readdirSync(imgDir).filter((f) => !f.startsWith('.') && !used.has(f));
+  assert.deepStrictEqual(orphans, [], `沒有作品使用的封面圖：${orphans.join('、')}`);
 });
 
 console.log('\n全部 ' + passed + ' 項通過');
