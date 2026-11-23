@@ -44,7 +44,7 @@
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) 會在 PR 上執行：
 - `node apps-script/Code.test.js`（Google Apps Script 單元測試）
-- `node tests/site.test.js`（統計計算模組與作品／圖片資料一致性檢查）
+- `node tests/site.test.js`（統計計算模組，以及作品資料檢查：分類鍵、連結格式、名稱不重複、封面圖存在且沒有沒在用的圖）
 - `bundle exec jekyll build`（確認 `_data/*.yml` 與 Liquid 樣板可正常建置）
 
 CI 只做檢查、不負責部署，網站仍由 GitHub Pages 自動建置。
