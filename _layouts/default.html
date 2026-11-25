@@ -23,7 +23,16 @@
   <main id="main">
     {{ content }}
   </main>
+  {%- comment -%} Ko-fi 帳號在 _config.yml 的 kofi 設定；某一頁不想顯示就在 front matter 加 kofi: false {%- endcomment -%}
+  {%- assign show_kofi = false -%}
+  {%- if site.kofi and site.kofi != '' and page.kofi != false -%}{%- assign show_kofi = true -%}{%- endif -%}
+  {%- if show_kofi %}
+  {% include kofi-cta.html %}
+  {%- endif -%}
   {%- include footer.html -%}
+  {%- if show_kofi %}
+  {% include kofi-fab.html %}
+  {%- endif %}
   <script src="{{ '/assets/js/site.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 </body>
 </html>

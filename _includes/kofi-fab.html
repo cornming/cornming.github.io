@@ -1,0 +1,10 @@
+{%- comment -%}
+  右下角的 Ko-fi 懸浮按鈕：桌機顯示文字，窄螢幕（< 640px）只留咖啡杯圖示。
+  捲到頁尾的支持卡片時，site.js 會先把它藏起來，避免重複、也不擋到頁尾連結。
+  ★ Ko-fi 帳號在 _config.yml 的 `kofi:` 設定，這裡不用改；網址會組成 https://ko-fi.com/<帳號>
+{%- endcomment -%}
+{%- assign kofi_url = 'https://ko-fi.com/' | append: site.kofi -%}
+<a class="kofi-fab" href="{{ kofi_url }}" target="_blank" rel="noopener noreferrer" title="在 Ko-fi 請我喝杯咖啡">
+  <span class="kofi-fab-icon">{% include kofi-icon.html %}</span>
+  <span class="kofi-fab-label">在 Ko-fi 請我喝杯咖啡</span><span class="sr-only">（另開新分頁）</span>
+</a>

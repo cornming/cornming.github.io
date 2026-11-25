@@ -16,6 +16,12 @@ author:
   github: cornming
   avatar: https://avatars.githubusercontent.com/u/19969233?v=4
 
+# ── Ko-fi 贊助 ───────────────────────────────
+# ★ 要換 Ko-fi 帳號，只要改這一行：填 https://ko-fi.com/ 後面的帳號名稱。
+#   右下角懸浮按鈕與頁尾上方的支持卡片都會一起換成新網址（_includes/kofi-*.html）。
+#   清空（kofi: ""）就會兩處都不顯示；單一頁面不想顯示，在該頁 front matter 加 kofi: false。
+kofi: cornming
+
 # 分享到社群時的預設圖片
 logo: https://avatars.githubusercontent.com/u/19969233?v=4
 
