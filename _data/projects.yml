@@ -104,7 +104,7 @@
 
 - name: Pixel 螢幕即時翻譯
   en: pixel-screen-translate
-  status: v0.5.0
+  status: v0.4.0
   categories: [desktop]
   summary: 像 Google Pixel 手機一樣原地覆蓋翻譯螢幕內容的 Windows 桌面工具。內建 Windows 原生離線 OCR、智慧段落合併、LRU 記憶體快取、雙翻譯檢視模式與動態滾輪即時跟隨。
   highlights:
