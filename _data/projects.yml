@@ -18,7 +18,7 @@
 
 - name: AI 額度工作列
   en: ai-quota-bar
-  status: v0.3.0
+  status: v0.4.0
   categories: [desktop]
   summary: 把 Claude、Codex、GitHub Copilot、Antigravity 的訂閱額度直接顯示在 Windows 工作列的時鐘旁，一眼看到各家還剩多少、什麼時候重置。
   highlights:
