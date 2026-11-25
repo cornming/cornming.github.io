@@ -16,6 +16,24 @@
 #   links       按鈕：label 是文字，url 是網址；第一個會是主要按鈕（選填）
 # ─────────────────────────────────────────────────────────────
 
+- name: AI 額度工作列
+  en: ai-quota-bar
+  status: v0.1.0
+  categories: [desktop]
+  summary: 把 Claude、Codex、GitHub Copilot、Antigravity 的訂閱額度直接顯示在 Windows 工作列的時鐘旁，一眼看到各家還剩多少、什麼時候重置。
+  highlights:
+    - 深色 HUD 面板嵌進工作列，LED 分段進度條，用量到 75%、90% 會變色；各家用自己 App 的圖示代表，不佔多餘寬度
+    - 直接讀各工具已經存好的登入，不用輸入帳號密碼；Claude 登入快到期時，照 Claude Code 自己的鎖與流程換新 token
+    - 可以選擇顯示在哪個螢幕的工作列、從系統匣圖示顯示或隱藏，Copilot 可在個人與公司帳號間切換
+    - 單一約 410 KB 的 Rust 執行檔，不收集任何資料，只連到各家官方伺服器
+  tech: [Rust, Win32 API, WinHTTP, GDI]
+  image: /assets/img/projects/ai-quota-bar.jpg
+  links:
+    - label: 下載
+      url: https://github.com/cornming/ai-quota-bar/releases/latest
+    - label: 原始碼
+      url: https://github.com/cornming/ai-quota-bar
+
 - name: 軟體人情報站
   en: dev-intel
   categories: [web]
