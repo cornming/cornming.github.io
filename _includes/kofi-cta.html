@@ -1,0 +1,19 @@
+{%- comment -%}
+  頁尾上方的 Ko-fi 支持卡片。
+  ★ Ko-fi 帳號在 _config.yml 的 `kofi:` 設定，這裡不用改；網址會組成 https://ko-fi.com/<帳號>
+{%- endcomment -%}
+{%- assign kofi_url = 'https://ko-fi.com/' | append: site.kofi -%}
+<section class="kofi-cta-wrap" aria-labelledby="kofi-cta-title">
+  <div class="container">
+    <div class="kofi-cta">
+      <span class="kofi-cta-icon">{% include kofi-icon.html %}</span>
+      <div class="kofi-cta-text">
+        <h2 id="kofi-cta-title">喜歡這些作品嗎？</h2>
+        <p>如果你喜歡這些小工具或專案，歡迎透過 Ko-fi 請我喝杯咖啡，支持我持續開發更多免費資源！不贊助也完全沒關係，能幫上你的忙就很開心了。</p>
+      </div>
+      <a class="btn btn-primary kofi-cta-btn" href="{{ kofi_url }}" target="_blank" rel="noopener noreferrer">
+        {% include kofi-icon.html %}<span>在 Ko-fi 請我喝杯咖啡</span><span class="sr-only">（另開新分頁）</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -68,3 +68,20 @@
     boxes.forEach(function (d) { d.open = false; });
   }
 })();
+
+// Ko-fi 懸浮按鈕：頁尾的支持卡片或頁尾出現在畫面上時先藏起來，不重複、也不擋到頁尾連結
+(function () {
+  var fab = document.querySelector('.kofi-fab');
+  if (!fab || typeof window.IntersectionObserver !== 'function') return;
+  var targets = document.querySelectorAll('.kofi-cta-wrap, .site-footer');
+  if (!targets.length) return;
+  var visible = new Set();
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible.add(e.target);
+      else visible.delete(e.target);
+    });
+    fab.classList.toggle('is-hidden', visible.size > 0);
+  });
+  targets.forEach(function (t) { io.observe(t); });
+})();

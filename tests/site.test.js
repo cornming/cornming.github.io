@@ -107,4 +107,24 @@ ok('YAML 資料與作品封面圖檔一致且分類鍵存在', () => {
   assert.deepStrictEqual(orphans, [], `沒有作品使用的封面圖：${orphans.join('、')}`);
 });
 
+ok('開新分頁的連結都有 rel="noopener noreferrer"', () => {
+  const dirs = ['_includes', '_layouts', '.', 'stats', 'blog'];
+  const files = dirs.flatMap((d) =>
+    fs.readdirSync(path.join(root, d)).filter((f) => f.endsWith('.html')).map((f) => path.join(d, f))
+  );
+  for (const f of files) {
+    const html = fs.readFileSync(path.join(root, f), 'utf8');
+    for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) || []) {
+      const rel = (tag.match(/rel="([^"]*)"/) || [])[1] || '';
+      const words = rel.split(/\s+/);
+      assert.ok(words.includes('noopener') && words.includes('noreferrer'), `${f} 的 ${tag} 缺 rel="noopener noreferrer"`);
+    }
+  }
+});
+
+ok('Ko-fi 帳號只含網址允許的字元', () => {
+  const kofi = execFileSync('ruby', ['-ryaml', '-e', 'print YAML.load_file("_config.yml")["kofi"].to_s'], { cwd: root, encoding: 'utf8' });
+  assert.ok(kofi === '' || /^[A-Za-z0-9_]+$/.test(kofi), `_config.yml 的 kofi 只填帳號名稱，不要整個網址：${kofi}`);
+});
+
 console.log('\n全部 ' + passed + ' 項通過');
