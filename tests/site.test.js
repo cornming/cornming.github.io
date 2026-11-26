@@ -127,4 +127,9 @@ ok('Ko-fi 帳號只含網址允許的字元', () => {
   assert.ok(kofi === '' || /^[A-Za-z0-9_]+$/.test(kofi), `_config.yml 的 kofi 只填帳號名稱，不要整個網址：${kofi}`);
 });
 
+ok('Portaly 網址留空或是 https:// 開頭', () => {
+  const url = execFileSync('ruby', ['-ryaml', '-e', 'print YAML.load_file("_config.yml")["portaly_url"].to_s'], { cwd: root, encoding: 'utf8' });
+  assert.ok(url === '' || /^https:\/\/[^\s"<>]+$/.test(url), `_config.yml 的 portaly_url 要是 https:// 開頭的完整網址：${url}`);
+});
+
 console.log('\n全部 ' + passed + ' 項通過');

@@ -22,6 +22,12 @@ author:
 #   清空（kofi: ""）就會兩處都不顯示；單一頁面不想顯示，在該頁 front matter 加 kofi: false。
 kofi: cornming
 
+# ── 台灣讀者的本地付款（Portaly）───────────────
+# Ko-fi 只能透過 PayPal 付款，而台灣的 PayPal 帳戶不能付款給台灣帳戶，所以另外給台灣讀者一個 Portaly 連結。
+# ★ 填上你 Portaly 頁面的完整網址（要用 https:// 開頭），頁尾支持卡片就會多一顆「台灣讀者：用 Portaly 支持」按鈕。
+#   留空（portaly_url: ""）就不顯示。
+portaly_url: "https://portaly.cc/cornming"
+
 # 分享到社群時的預設圖片
 logo: https://avatars.githubusercontent.com/u/19969233?v=4
 
